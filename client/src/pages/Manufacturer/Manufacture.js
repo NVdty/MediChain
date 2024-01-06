@@ -14,9 +14,9 @@ export default function Manufacture(props) {
     const [loading, setLoading] = React.useState(false);
     const [fvalid, setfvalid] = React.useState(false);
     const navItem = [
-        ["Add Product", "/manufacturer/manufacture"],
-        ["Ship Product", "/manufacturer/ship"],
-        ["All Products", "/manufacturer/allManufacture"],
+        ["Data Obat", "/manufacturer/manufacture"],
+        ["Kirim Obat", "/manufacturer/ship"],
+        ["Daftar Obat", "/manufacturer/allManufacture"],
     ];
     const [manuForm, setManuForm] = React.useState({
         id: 0,
@@ -94,13 +94,13 @@ export default function Manufacture(props) {
 
     return (
         <>
-            <Navbar pageTitle={"Manufacturer"} navItems={navItem}>
+            <Navbar pageTitle={"Manufacture"} navItems={navItem}>
                 {loading ? (
                     <Loader />
                 ) : (
                     <>
                         <div className={classes.FormWrap}>
-                            <h1 className={classes.pageHeading}>Add Product</h1>
+                            <h1 className={classes.pageHeading} style={{color:"#082616"}}>Data Obat</h1>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -109,18 +109,7 @@ export default function Manufacture(props) {
                                         variant="outlined"
                                         value={manuForm.manufacturerName}
                                         onChange={handleChangeManufacturerForm}
-                                        label="Manufacturer Name"
-                                        style={{ width: "100%" }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        name="manufacturerDetails"
-                                        variant="outlined"
-                                        value={manuForm.manufacturerDetails}
-                                        onChange={handleChangeManufacturerForm}
-                                        label="Manufacturer Details"
+                                        label="Nama Manufacturer"
                                         style={{ width: "100%" }}
                                     />
                                 </Grid>
@@ -149,11 +138,22 @@ export default function Manufacture(props) {
                                 <Grid item xs={12}>
                                     <TextField
                                         required
+                                        name="productCategory"
+                                        variant="outlined"
+                                        value={manuForm.productCategory}
+                                        onChange={handleChangeManufacturerForm}
+                                        label="Kategori Obat"
+                                        style={{ width: "100%" }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
                                         name="productName"
                                         variant="outlined"
                                         value={manuForm.productName}
                                         onChange={handleChangeManufacturerForm}
-                                        label="Product Name"
+                                        label="Nama Obat"
                                         style={{ width: "100%" }}
                                     />
                                 </Grid>
@@ -164,7 +164,7 @@ export default function Manufacture(props) {
                                         variant="outlined"
                                         value={manuForm.productCode}
                                         onChange={handleChangeManufacturerForm}
-                                        label="Product Code"
+                                        label="Kode Obat"
                                         style={{ width: "100%" }}
                                     />
                                 </Grid>
@@ -175,18 +175,18 @@ export default function Manufacture(props) {
                                         variant="outlined"
                                         value={manuForm.productPrice}
                                         onChange={handleChangeManufacturerForm}
-                                        label="Product Price"
+                                        label="Nomor Batch"
                                         style={{ width: "100%" }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         required
-                                        name="productCategory"
+                                        name="manufacturerDetails"
                                         variant="outlined"
-                                        value={manuForm.productCategory}
+                                        value={manuForm.manufacturerDetails}
                                         onChange={handleChangeManufacturerForm}
-                                        label="Product Category"
+                                        label="Keterangan"
                                         style={{ width: "100%" }}
                                     />
                                 </Grid>
@@ -198,6 +198,7 @@ export default function Manufacture(props) {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleSubmitManufacturerForm}
+                                style={{backgroundColor: "#212e27"}}
                             >
                                 SUBMIT
               </Button>

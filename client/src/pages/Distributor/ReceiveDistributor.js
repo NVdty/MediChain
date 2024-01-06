@@ -15,25 +15,27 @@ import { useStyles } from "../../components/Styles";
 import clsx from "clsx";
 import Loader from "../../components/Loader";
 
-export default function ReceiveDeliveryHub(props) {
+export default function ReceiveDistributor(props) {
   const supplyChainContract = props.supplyChainContract;
   const { roles } = useRole();
   const [count, setCount] = React.useState(0);
   const [allReceiveProducts, setAllReceiveProducts] = React.useState([]);
   const [modalData, setModalData] = useState([]);
   const [open, setOpen] = useState(false);
-  const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
-  const navItem = [
-    ["Receive Product", "/DeliveryHub/receive"],
-    ["Ship Product", "/DeliveryHub/ship"],
-  ];
+  const classes = useStyles();
   const [alertText, setalertText] = React.useState("");
+  const navItem = [
+    ["Beli Obat", "/Distributor/allObats"],
+    ["Terima Obat", "/Distributor/receive"],
+    ["Kirim Obat", "/Distributor/ship"],
+  ];
   React.useEffect(() => {
     (async () => {
       setLoading(true);
       const cnt = await supplyChainContract.methods.fetchProductCount().call();
       setCount(cnt);
+     
     })();
 
     (async () => {
@@ -43,7 +45,7 @@ export default function ReceiveDeliveryHub(props) {
           .fetchProductState(i)
           .call();
 
-        if (prodState === "5") {
+        if (prodState === "2") {
           const prodData = [];
           const a = await supplyChainContract.methods
             .fetchProductPart1(i, "product", 0)
@@ -65,26 +67,27 @@ export default function ReceiveDeliveryHub(props) {
     })();
   }, [count]);
 
+  const handleReceiveButton = async (id, long, lat) => {
+    try{
+      await supplyChainContract.methods
+      .receiveByDistributor(parseInt(id), long, lat)
+      .send({ from: roles.distributor, gas: 1000000 })
+      .on("transactionHash", function (hash) {
+        handleSetTxhash(id, hash);
+      });
+    
+    setCount(0);
+    setOpen(false);
+    }catch{
+      setalertText("Kamu Bukan Pemilik Produk Ini");
+    }
+    
+  };
+
   const handleSetTxhash = async (id, hash) => {
     await supplyChainContract.methods
       .setTransactionHash(id, hash)
       .send({ from: roles.manufacturer, gas: 900000 });
-  };
-
-  const handleReceiveButton = async (id, long, lat) => {
-    try{
-      await supplyChainContract.methods
-      .receiveByDeliveryHub(parseInt(id), long, lat)
-      .send({ from: roles.deliveryhub, gas: 1000000 })
-      .on("transactionHash", function (hash) {
-        handleSetTxhash(id, hash);
-      });
-     setCount(0);
-     setOpen(false);
-    }catch{
-      setalertText("You are not the owner of the Product");
-    }
-    
   };
 
   const [page, setPage] = React.useState(0);
@@ -109,7 +112,7 @@ export default function ReceiveDeliveryHub(props) {
 
   return (
     <div classname={classes.pageWrap}>
-      <Navbar pageTitle={"Delivery Hub"} navItems={navItem}>
+      <Navbar pageTitle={"Distributor"} navItems={navItem}>
         {loading ? (
           <Loader />
         ) : (
@@ -119,10 +122,10 @@ export default function ReceiveDeliveryHub(props) {
               open={open}
               handleClose={handleClose}
               handleReceiveButton={handleReceiveButton}
-              aText={alertText}
+              aText = {alertText}
             />
 
-            <h1 className={classes.pageHeading}>Products To be Received</h1>
+            <h1 className={classes.pageHeading}>Obat Yang Diterima</h1>
             <h3 className={classes.tableCount}>
               Total : {allReceiveProducts.length}
             </h3>
@@ -134,19 +137,22 @@ export default function ReceiveDeliveryHub(props) {
                     <TableHead>
                       <TableRow>
                         <TableCell className={classes.TableHead} align="left">
-                          Universal ID
+                          ID
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Code
+                          Kode Obat
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacturer
+                          Manufacture
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacture Date
+                          Tanggal Dikirim
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Name
+                          Nama Obat
+                        </TableCell>
+                        <TableCell className={classes.TableHead} align="center">
+                          Nomor Batch
                         </TableCell>
                         <TableCell
                           className={clsx(
@@ -155,13 +161,13 @@ export default function ReceiveDeliveryHub(props) {
                           )}
                           align="center"
                         >
-                          Owner
+                          Pemilik
                         </TableCell>
                         <TableCell
                           className={clsx(classes.TableHead)}
                           align="center"
                         >
-                          RECEIVE
+                          Terima
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -209,7 +215,7 @@ export default function ReceiveDeliveryHub(props) {
                                     align="center"
                                     onClick={() => handleClick(prod)}
                                   >
-                                    {d.toDateString() + " " + d.toTimeString()}
+                                    {d.toDateString()}
                                   </TableCell>
                                   <TableCell
                                     className={classes.TableCell}
@@ -217,6 +223,13 @@ export default function ReceiveDeliveryHub(props) {
                                     onClick={() => handleClick(prod)}
                                   >
                                     {prod[1][1]}
+                                  </TableCell>
+                                  <TableCell
+                                    className={classes.TableCell}
+                                    align="center"
+                                    onClick={() => handleClick(prod)}
+                                  >
+                                    {prod[1][3]}
                                   </TableCell>
                                   <TableCell
                                     className={clsx(
@@ -236,9 +249,10 @@ export default function ReceiveDeliveryHub(props) {
                                       type="submit"
                                       variant="contained"
                                       color="primary"
+                                      style={{backgroundColor: "#212e27"}}
                                       onClick={() => handleClick(prod)}
                                     >
-                                      RECEIVE
+                                      TERIMA
                                     </Button>
                                   </TableCell>
                                 </TableRow>

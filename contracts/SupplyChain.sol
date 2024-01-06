@@ -28,40 +28,40 @@ contract SupplyChain {
         roles[_account].Manufacturer = true;
     }
 
-    function hasThirdPartyRole(address _account) public view returns (bool) {
+    function hasDistributorRole(address _account) public view returns (bool) {
         require(_account != address(0));
-        return roles[_account].ThirdParty;
+        return roles[_account].Distributor;
     }
 
-    function addThirdPartyRole(address _account) public {
+    function addDistributorRole(address _account) public {
         require(_account != address(0));
-        require(!hasThirdPartyRole(_account));
+        require(!hasDistributorRole(_account));
 
-        roles[_account].ThirdParty = true;
+        roles[_account].Distributor = true;
     }
 
-    function hasDeliveryHubRole(address _account) public view returns (bool) {
+    function hasPengirimanRole(address _account) public view returns (bool) {
         require(_account != address(0));
-        return roles[_account].DeliveryHub;
+        return roles[_account].Pengiriman;
     }
 
-    function addDeliveryHubRole(address _account) public {
+    function addPengirimanRole(address _account) public {
         require(_account != address(0));
-        require(!hasDeliveryHubRole(_account));
+        require(!hasPengirimanRole(_account));
 
-        roles[_account].DeliveryHub = true;
+        roles[_account].Pengiriman = true;
     }
 
-    function hasCustomerRole(address _account) public view returns (bool) {
+    function hasApotekRole(address _account) public view returns (bool) {
         require(_account != address(0));
-        return roles[_account].Customer;
+        return roles[_account].Apotek;
     }
 
-    function addCustomerRole(address _account) public {
+    function addApotekRole(address _account) public {
         require(_account != address(0));
-        require(!hasDeliveryHubRole(_account));
+        require(!hasPengirimanRole(_account));
 
-        roles[_account].Customer = true;
+        roles[_account].Apotek = true;
     }
 
     constructor() public payable {
@@ -71,14 +71,14 @@ contract SupplyChain {
     }
 
     event Manufactured(uint256 uid);
-    event PurchasedByThirdParty(uint256 uid);
+    event PurchasedByDistributor(uint256 uid);
     event ShippedByManufacturer(uint256 uid);
-    event ReceivedByThirdParty(uint256 uid);
-    event PurchasedByCustomer(uint256 uid);
-    event ShippedByThirdParty(uint256 uid);
-    event ReceivedByDeliveryHub(uint256 uid);
-    event ShippedByDeliveryHub(uint256 uid);
-    event ReceivedByCustomer(uint256 uid);
+    event ReceivedByDistributor(uint256 uid);
+    event PurchasedByApotek(uint256 uid);
+    event ShippedByDistributor(uint256 uid);
+    event ReceivedByPengiriman(uint256 uid);
+    event ShippedByPengiriman(uint256 uid);
+    event ReceivedByApotek(uint256 uid);
 
     modifier verifyAddress(address add) {
         require(msg.sender == add);
@@ -97,44 +97,44 @@ contract SupplyChain {
         _;
     }
 
-    modifier receivedByThirdParty(uint256 _uid) {
+    modifier receivedByDistributor(uint256 _uid) {
         require(
-            products[_uid].productState == Structure.State.ReceivedByThirdParty
+            products[_uid].productState == Structure.State.ReceivedByDistributor
         );
         _;
     }
 
-    modifier purchasedByCustomer(uint256 _uid) {
+    modifier purchasedByApotek(uint256 _uid) {
         require(
-            products[_uid].productState == Structure.State.PurchasedByCustomer
+            products[_uid].productState == Structure.State.PurchasedByApotek
         );
         _;
     }
 
-    modifier shippedByThirdParty(uint256 _uid) {
+    modifier shippedByDistributor(uint256 _uid) {
         require(
-            products[_uid].productState == Structure.State.ShippedByThirdParty
+            products[_uid].productState == Structure.State.ShippedByDistributor
         );
         _;
     }
 
-    modifier receivedByDeliveryHub(uint256 _uid) {
+    modifier receivedByPengiriman(uint256 _uid) {
         require(
-            products[_uid].productState == Structure.State.ReceivedByDeliveryHub
+            products[_uid].productState == Structure.State.ReceivedByPengiriman
         );
         _;
     }
 
-    modifier shippedByDeliveryHub(uint256 _uid) {
+    modifier shippedByPengiriman(uint256 _uid) {
         require(
-            products[_uid].productState == Structure.State.ShippedByDeliveryHub
+            products[_uid].productState == Structure.State.ShippedByPengiriman
         );
         _;
     }
 
-    modifier receivedByCustomer(uint256 _uid) {
+    modifier receivedByApotek(uint256 _uid) {
         require(
-            products[_uid].productState == Structure.State.ReceivedByCustomer
+            products[_uid].productState == Structure.State.ReceivedByApotek
         );
         _;
     }
@@ -151,17 +151,17 @@ contract SupplyChain {
         address deliveryHub;
         string memory deliveryHubLongitude;
         string memory deliveryHubLatitude;
-        address customer;
+        address apotek;
 
-        product.thirdparty.thirdParty = thirdParty;
-        product.thirdparty.thirdPartyLongitude = thirdPartyLongitude;
-        product.thirdparty.thirdPartyLatitude = thirdPartyLatitude;
+        product.distributor.thirdParty = thirdParty;
+        product.distributor.thirdPartyLongitude = thirdPartyLongitude;
+        product.distributor.thirdPartyLatitude = thirdPartyLatitude;
 
-        product.deliveryhub.deliveryHub = deliveryHub;
-        product.deliveryhub.deliveryHubLongitude = deliveryHubLongitude;
-        product.deliveryhub.deliveryHubLatitude = deliveryHubLatitude;
+        product.pengiriman.deliveryHub = deliveryHub;
+        product.pengiriman.deliveryHubLongitude = deliveryHubLongitude;
+        product.pengiriman.deliveryHubLatitude = deliveryHubLatitude;
 
-        product.customer = customer;
+        product.apotek = apotek;
         product.transaction = transaction;
     }
 
@@ -226,17 +226,17 @@ contract SupplyChain {
     }
 
     ///@dev STEP 2 : Purchase of manufactured product by Third Party.
-    function purchaseByThirdParty(uint256 _uid) public manufactured(_uid) {
-        require(hasThirdPartyRole(msg.sender));
-        products[_uid].thirdparty.thirdParty = msg.sender;
-        products[_uid].productState = Structure.State.PurchasedByThirdParty;
+    function purchaseByDistributor(uint256 _uid) public manufactured(_uid) {
+        require(hasDistributorRole(msg.sender));
+        products[_uid].distributor.thirdParty = msg.sender;
+        products[_uid].productState = Structure.State.PurchasedByDistributor;
         productHistory[_uid].history.push(products[_uid]);
 
-        emit PurchasedByThirdParty(_uid);
+        emit PurchasedByDistributor(_uid);
     }
 
     ///@dev STEP 3 : Shipping of purchased product to Third Party.
-    function shipToThirdParty(uint256 _uid)
+    function shipToDistributor(uint256 _uid)
         public
         verifyAddress(products[_uid].manufacturer.manufacturer)
     {
@@ -248,94 +248,94 @@ contract SupplyChain {
     }
 
     ///@dev STEP 4 : Received the purchased product shipped by Manufacturer.
-    function receiveByThirdParty(
+    function receiveByDistributor(
         uint256 _uid,
         string memory thirdPartyLongitude,
         string memory thirdPartyLatitude
     )
         public
         shippedByManufacturer(_uid)
-        verifyAddress(products[_uid].thirdparty.thirdParty)
+        verifyAddress(products[_uid].distributor.thirdParty)
     {
-        require(hasThirdPartyRole(msg.sender));
+        require(hasDistributorRole(msg.sender));
         products[_uid].owner = msg.sender;
-        products[_uid].thirdparty.thirdPartyLongitude = thirdPartyLongitude;
-        products[_uid].thirdparty.thirdPartyLatitude = thirdPartyLatitude;
-        products[_uid].productState = Structure.State.ReceivedByThirdParty;
+        products[_uid].distributor.thirdPartyLongitude = thirdPartyLongitude;
+        products[_uid].distributor.thirdPartyLatitude = thirdPartyLatitude;
+        products[_uid].productState = Structure.State.ReceivedByDistributor;
         productHistory[_uid].history.push(products[_uid]);
 
-        emit ReceivedByThirdParty(_uid);
+        emit ReceivedByDistributor(_uid);
     }
 
-    ///@dev STEP 5 : Purchase of a product at third party by Customer.
-    function purchaseByCustomer(uint256 _uid)
+    ///@dev STEP 5 : Purchase of a product at third party by Apotek.
+    function purchaseByApotek(uint256 _uid)
         public
-        receivedByThirdParty(_uid)
+        receivedByDistributor(_uid)
     {
-        require(hasCustomerRole(msg.sender));
-        products[_uid].customer = msg.sender;
-        products[_uid].productState = Structure.State.PurchasedByCustomer;
+        require(hasApotekRole(msg.sender));
+        products[_uid].apotek = msg.sender;
+        products[_uid].productState = Structure.State.PurchasedByApotek;
         productHistory[_uid].history.push(products[_uid]);
 
-        emit PurchasedByCustomer(_uid);
+        emit PurchasedByApotek(_uid);
     }
 
-    ///@dev STEP 7 : Shipping of product by third party purchased by customer.
-    function shipByThirdParty(uint256 _uid)
+    ///@dev STEP 7 : Shipping of product by third party purchased by apotek.
+    function shipByDistributor(uint256 _uid)
         public
         verifyAddress(products[_uid].owner)
-        verifyAddress(products[_uid].thirdparty.thirdParty)
+        verifyAddress(products[_uid].distributor.thirdParty)
     {
-        require(hasThirdPartyRole(msg.sender));
-        products[_uid].productState = Structure.State.ShippedByThirdParty;
+        require(hasDistributorRole(msg.sender));
+        products[_uid].productState = Structure.State.ShippedByDistributor;
         productHistory[_uid].history.push(products[_uid]);
 
-        emit ShippedByThirdParty(_uid);
+        emit ShippedByDistributor(_uid);
     }
 
-    ///@dev STEP 8 : Receiveing of product by delivery hub purchased by customer.
-    function receiveByDeliveryHub(
+    ///@dev STEP 8 : Receiveing of product by delivery hub purchased by apotek.
+    function receiveByPengiriman(
         uint256 _uid,
         string memory deliveryHubLongitude,
         string memory deliveryHubLatitude
-    ) public shippedByThirdParty(_uid) {
-        require(hasDeliveryHubRole(msg.sender));
+    ) public shippedByDistributor(_uid) {
+        require(hasPengirimanRole(msg.sender));
         products[_uid].owner = msg.sender;
-        products[_uid].deliveryhub.deliveryHub = msg.sender;
-        products[_uid].deliveryhub.deliveryHubLongitude = deliveryHubLongitude;
-        products[_uid].deliveryhub.deliveryHubLatitude = deliveryHubLatitude;
-        products[_uid].productState = Structure.State.ReceivedByDeliveryHub;
+        products[_uid].pengiriman.deliveryHub = msg.sender;
+        products[_uid].pengiriman.deliveryHubLongitude = deliveryHubLongitude;
+        products[_uid].pengiriman.deliveryHubLatitude = deliveryHubLatitude;
+        products[_uid].productState = Structure.State.ReceivedByPengiriman;
         productHistory[_uid].history.push(products[_uid]);
 
-        emit ReceivedByDeliveryHub(_uid);
+        emit ReceivedByPengiriman(_uid);
     }
 
-    ///@dev STEP 9 : Shipping of product by delivery hub purchased by customer.
-    function shipByDeliveryHub(uint256 _uid)
+    ///@dev STEP 9 : Shipping of product by delivery hub purchased by apotek.
+    function shipByPengiriman(uint256 _uid)
         public
-        receivedByDeliveryHub(_uid)
+        receivedByPengiriman(_uid)
         verifyAddress(products[_uid].owner)
-        verifyAddress(products[_uid].deliveryhub.deliveryHub)
+        verifyAddress(products[_uid].pengiriman.deliveryHub)
     {
-        require(hasDeliveryHubRole(msg.sender));
-        products[_uid].productState = Structure.State.ShippedByDeliveryHub;
+        require(hasPengirimanRole(msg.sender));
+        products[_uid].productState = Structure.State.ShippedByPengiriman;
         productHistory[_uid].history.push(products[_uid]);
 
-        emit ShippedByDeliveryHub(_uid);
+        emit ShippedByPengiriman(_uid);
     }
 
-    ///@dev STEP 10 : Shipping of product by delivery hub purchased by customer.
-    function receiveByCustomer(uint256 _uid)
+    ///@dev STEP 10 : Shipping of product by delivery hub purchased by apotek.
+    function receiveByApotek(uint256 _uid)
         public
-        shippedByDeliveryHub(_uid)
-        verifyAddress(products[_uid].customer)
+        shippedByPengiriman(_uid)
+        verifyAddress(products[_uid].apotek)
     {
-        require(hasCustomerRole(msg.sender));
+        require(hasApotekRole(msg.sender));
         products[_uid].owner = msg.sender;
-        products[_uid].productState = Structure.State.ReceivedByCustomer;
+        products[_uid].productState = Structure.State.ReceivedByApotek;
         productHistory[_uid].history.push(products[_uid]);
 
-        emit ReceivedByCustomer(_uid);
+        emit ReceivedByApotek(_uid);
     }
 
     ///@dev Fetch product
@@ -411,8 +411,8 @@ contract SupplyChain {
             product.productdet.productPrice,
             product.productdet.productCategory,
             product.productState,
-            product.thirdparty.thirdParty,
-            product.thirdparty.thirdPartyLongitude
+            product.distributor.thirdParty,
+            product.distributor.thirdPartyLongitude
         );
     }
 
@@ -441,11 +441,11 @@ contract SupplyChain {
             product = productHistory[_uid].history[i];
         }
         return (
-            product.thirdparty.thirdPartyLatitude,
-            product.deliveryhub.deliveryHub,
-            product.deliveryhub.deliveryHubLongitude,
-            product.deliveryhub.deliveryHubLatitude,
-            product.customer,
+            product.distributor.thirdPartyLatitude,
+            product.pengiriman.deliveryHub,
+            product.pengiriman.deliveryHubLongitude,
+            product.pengiriman.deliveryHubLatitude,
+            product.apotek,
             product.transaction
         );
     }

@@ -4,14 +4,14 @@ pragma solidity >=0.4.21 <0.9.0;
 library Structure {
     enum State {
         Manufactured,
-        PurchasedByThirdParty,
+        PurchasedByDistributor,
         ShippedByManufacturer,
-        ReceivedByThirdParty,
-        PurchasedByCustomer,
-        ShippedByThirdParty,
-        ReceivedByDeliveryHub,
-        ShippedByDeliveryHub,
-        ReceivedByCustomer
+        ReceivedByDistributor,
+        PurchasedByApotek,
+        ShippedByDistributor,
+        ReceivedByPengiriman,
+        ShippedByPengiriman,
+        ReceivedByApotek
     }
     struct ManufactureDetails {
         address manufacturer;
@@ -19,7 +19,7 @@ library Structure {
         string manufacturerDetails;
         string manufacturerLongitude;
         string manufacturerLatitude;
-        uint256 manufacturedDate;
+        string manufacturedDate;
     }
     struct ProductDetails {
         string productName;
@@ -27,12 +27,12 @@ library Structure {
         uint256 productPrice;
         string productCategory;
     }
-    struct ThirdPartyDetails {
+    struct DistributorDetails {
         address thirdParty;
         string thirdPartyLongitude;
         string thirdPartyLatitude;
     }
-    struct DeliveryHubDetails {
+    struct PengirimanDetails {
         address deliveryHub;
         string deliveryHubLongitude;
         string deliveryHubLatitude;
@@ -43,10 +43,10 @@ library Structure {
         address owner;
         State productState;
         ManufactureDetails manufacturer;
-        ThirdPartyDetails thirdparty;
+        DistributorDetails distributor;
         ProductDetails productdet;
-        DeliveryHubDetails deliveryhub;
-        address customer;
+        PengirimanDetails pengiriman;
+        address apotek;
         string transaction;
     }
 
@@ -56,8 +56,8 @@ library Structure {
 
     struct Roles {
         bool Manufacturer;
-        bool ThirdParty;
-        bool DeliveryHub;
-        bool Customer;
+        bool Distributor;
+        bool Pengiriman;
+        bool Apotek;
     }
 }

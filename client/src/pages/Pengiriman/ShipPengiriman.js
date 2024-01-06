@@ -15,18 +15,18 @@ import ProductModal from "../../components/Modal";
 import clsx from "clsx";
 import Loader from "../../components/Loader";
 
-export default function PurchaseCustomer(props) {
+export default function ShipPengiriman(props) {
   const classes = useStyles();
   const supplyChainContract = props.supplyChainContract;
   const { roles } = useRole();
   const [count, setCount] = React.useState(0);
-  const [allProducts, setAllProducts] = React.useState([]);
+  const [allSoldProducts, setAllSoldProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const navItem = [
-    ["Purchase Product", "/Customer/buy"],
-    ["Receive Product", "/Customer/receive"],
-    ["Your Products", "/Customer/allReceived"],
+    ["Pengiriman Obat", "/Pengiriman/receive"],
+    ["Kirim Obat", "/Pengiriman/ship"],
   ];
+  const [alertText, setalertText] = React.useState("");
   React.useEffect(() => {
     (async () => {
       setLoading(true);
@@ -41,7 +41,7 @@ export default function PurchaseCustomer(props) {
           .fetchProductState(i)
           .call();
 
-        if (prodState === "3") {
+        if (prodState === "6") {
           const prodData = [];
           const a = await supplyChainContract.methods
             .fetchProductPart1(i, "product", 0)
@@ -58,10 +58,30 @@ export default function PurchaseCustomer(props) {
           arr.push(prodData);
         }
       }
-      setAllProducts(arr);
+      setAllSoldProducts(arr);
       setLoading(false);
     })();
   }, [count]);
+
+  const handleSetTxhash = async (id, hash) => {
+    await supplyChainContract.methods
+      .setTransactionHash(id, hash)
+      .send({ from: roles.manufacturer, gas: 900000 });
+  };
+
+  const handleShipButton = async (id) => {
+    try{
+      await supplyChainContract.methods
+      .shipByPengiriman(id)
+      .send({ from: roles.pengiriman, gas: 1000000 })
+      .on("transactionHash", function (hash) {
+        handleSetTxhash(id, hash);
+      });
+    setCount(0);
+    }catch{
+      setalertText("Kamu Bukan Pemilik Produk Ini");
+    }
+  };
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -84,26 +104,10 @@ export default function PurchaseCustomer(props) {
     setOpen(true);
   };
 
-  const handleBuyButton = async (id) => {
-    await supplyChainContract.methods
-      .purchaseByCustomer(id)
-      .send({ from: roles.customer, gas: 1000000 })
-      .on("transactionHash", function (hash) {
-        handleSetTxhash(id, hash);
-      });
-    setCount(0);
-  };
-
-  const handleSetTxhash = async (id, hash) => {
-    await supplyChainContract.methods
-      .setTransactionHash(id, hash)
-      .send({ from: roles.manufacturer, gas: 900000 });
-  };
-
   return (
     <>
       <div classname={classes.pageWrap}>
-        <Navbar pageTitle={"Customer"} navItems={navItem}>
+        <Navbar pageTitle={"Pengiriman"} navItems={navItem}>
           {loading ? (
             <Loader />
           ) : (
@@ -113,44 +117,44 @@ export default function PurchaseCustomer(props) {
                 open={open}
                 handleClose={handleClose}
               />
-
-              <h1 className={classes.pageHeading}>Purchase Products</h1>
+              <h1 className={classes.pageHeading}>Obat Yang Harus Dikirimkan</h1>
               <h3 className={classes.tableCount}>
-                Total : {allProducts.length}
+                Total : {allSoldProducts.length}
               </h3>
 
               <div>
+              <p><b style={{ color: "red" }}>{alertText.length !== 0 ? alertText : ""}</b></p>
                 <Paper className={classes.TableRoot}>
                   <TableContainer className={classes.TableContainer}>
                     <Table stickyHeader aria-label="sticky table">
                       <TableHead>
                         <TableRow>
                           <TableCell className={classes.TableHead} align="left">
-                            Universal ID
+                            ID
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Code
+                            Kode Obat
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacturer
+                            Tanggal Dikirimkan
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacture Date
+                            Nama Obat
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Name
+                            Nomor Batch
                           </TableCell>
                           <TableCell
                             className={clsx(
@@ -159,19 +163,19 @@ export default function PurchaseCustomer(props) {
                             )}
                             align="center"
                           >
-                            Owner
+                            Pembeli
                           </TableCell>
                           <TableCell
                             className={clsx(classes.TableHead)}
                             align="center"
                           >
-                            Buy
+                            Kirim
                           </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {allProducts.length !== 0 ? (
-                          allProducts
+                        {allSoldProducts.length !== 0 ? (
+                          allSoldProducts
                             .slice(
                               page * rowsPerPage,
                               page * rowsPerPage + rowsPerPage
@@ -202,20 +206,12 @@ export default function PurchaseCustomer(props) {
                                     >
                                       {prod[1][2]}
                                     </TableCell>
-                                    <TableCell
-                                      className={classes.TableCell}
-                                      align="center"
-                                      onClick={() => handleClick(prod)}
-                                    >
-                                      {prod[0][4]}
-                                    </TableCell>
+
                                     <TableCell
                                       align="center"
                                       onClick={() => handleClick(prod)}
                                     >
-                                      {d.toDateString() +
-                                        " " +
-                                        d.toTimeString()}
+                                      {d.toDateString()}
                                     </TableCell>
                                     <TableCell
                                       className={classes.TableCell}
@@ -232,7 +228,17 @@ export default function PurchaseCustomer(props) {
                                       align="center"
                                       onClick={() => handleClick(prod)}
                                     >
-                                      {prod[0][2]}
+                                      {prod[1][3]}
+                                    </TableCell>
+                                    <TableCell
+                                      className={clsx(
+                                        classes.TableCell,
+                                        classes.AddressCell
+                                      )}
+                                      align="center"
+                                      onClick={() => handleClick(prod)}
+                                    >
+                                      {prod[2][4]}
                                     </TableCell>
                                     <TableCell
                                       className={clsx(classes.TableCell)}
@@ -242,11 +248,12 @@ export default function PurchaseCustomer(props) {
                                         type="submit"
                                         variant="contained"
                                         color="primary"
+                                        style={{backgroundColor: "#212e27"}}
                                         onClick={() =>
-                                          handleBuyButton(prod[0][0])
+                                          handleShipButton(prod[0][0])
                                         }
                                       >
-                                        BUY
+                                        KIRIM
                                       </Button>
                                     </TableCell>
                                   </TableRow>
@@ -262,7 +269,7 @@ export default function PurchaseCustomer(props) {
                   <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={allProducts.length}
+                    count={allSoldProducts.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

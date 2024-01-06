@@ -9,7 +9,7 @@ export const useStyles = makeStyles({
     textAlign: "center",
     margin: "10px auto",
     padding: 0,
-    color: "#1a237e",
+    color: "#082616",
   },
 
   TableRoot: {
@@ -19,6 +19,7 @@ export const useStyles = makeStyles({
     border: "2px solid #1a237e",
     borderRadius: 10,
     boxShadow: "2px 2px 10px #9fa8da",
+    borderColor: "#212e27",
   },
   TableContainer: {
     maxHeight: 600,
@@ -33,14 +34,14 @@ export const useStyles = makeStyles({
     textAlign: "center",
     margin: "10px auto",
     padding: 0,
-    color: "#1a237e",
+    color: "#082616",
   },
   TableHead: {
-    backgroundColor: "#1a237e !important",
+    backgroundColor: "#212e27 !important",
     color: "#fff !important",
   },
   TableCell: {
-    color: "#1a237e !important",
+    color: "#19452d !important",
   },
 
   FormWrap: {
@@ -62,12 +63,14 @@ export const useStyles = makeStyles({
     padding: "2px 4px",
     margin: "10px",
     width: "100%",
+    borderColor: "#19452d"
   },
   ProductPaper: {
     padding: 10,
     borderRadius: 10,
     boxShadow: "2px 2px 10px #9fa8da",
     border: "2px solid #1a237e",
+    borderColor: "#19452d"
   },
   ExplorerdRow: {
     width: "100%",
@@ -78,7 +81,8 @@ export const useStyles = makeStyles({
     padding: 5,
     margin: "0 auto",
     fontWeight: 600,
-    color: "#1a237e",
+    color: "#0f4a2a",
+    borderColor: "#19452d"
   },
   TableRoot2: {
     width: "100%",
@@ -87,6 +91,7 @@ export const useStyles = makeStyles({
     border: "2px solid #1a237e",
     borderRadius: 10,
     boxShadow: "2px 2px 10px #9fa8da",
+    borderColor: "#19452d"
   },
 
   //Modal
@@ -105,6 +110,7 @@ export const useStyles = makeStyles({
     borderRadius: 10,
     boxShadow: "2px 2px 10px #9fa8da",
     overflow: "scroll",
+    borderColor: "#0f4a2a"
   },
   Reciptpaper: {
     backgroundColor: "#fff",
@@ -117,6 +123,7 @@ export const useStyles = makeStyles({
     borderRadius: 10,
     boxShadow: "2px 2px 10px #9fa8da",
     overflow: "scroll",
+    borderColor: "#0f4a2a"
   },
   dRow: {
     width: "100%",
@@ -126,21 +133,25 @@ export const useStyles = makeStyles({
     alignItems: "center",
     padding: 10,
     margin: "0 auto",
+    color: "#0f4a2a",
+    borderColor: "#0f4a2a",
   },
 
   dCol1: {
     width: "30%",
     textAlign: "left",
     fontWeight: 600,
-    color: "#1a237e",
+    color: "#0f4a2a",
+    borderColor: "#0f4a2a"
   },
   dCol2: {
     width: "70%",
     textAlign: "left",
     fontWeight: 600,
-    color: "#1a237e",
+    color: "#0f4a2a",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    borderColor: "#0f4a2a"
   },
 
   //Home

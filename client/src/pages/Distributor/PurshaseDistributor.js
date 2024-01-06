@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Navbar from "../../components/Navbar";
 import Button from "@material-ui/core/Button";
-import ProductModal from "../../components/Modal";
 import { useRole } from "../../context/RoleDataContext";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,30 +11,28 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 import { useStyles } from "../../components/Styles";
+import ProductModal from "../../components/Modal";
 import clsx from "clsx";
 import Loader from "../../components/Loader";
 
-export default function ReceiveThirdParty(props) {
+export default function PurchaseDistributor(props) {
+  const classes = useStyles();
   const supplyChainContract = props.supplyChainContract;
   const { roles } = useRole();
   const [count, setCount] = React.useState(0);
-  const [allReceiveProducts, setAllReceiveProducts] = React.useState([]);
-  const [modalData, setModalData] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [allObats, setAllProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const classes = useStyles();
-  const [alertText, setalertText] = React.useState("");
   const navItem = [
-    ["Buy Product", "/ThirdParty/allProducts"],
-    ["Receive Product", "/ThirdParty/receive"],
-    ["Ship Products", "/ThirdParty/ship"],
+    ["Beli Obat", "/Distributor/allObats"],
+    ["Terima Obat", "/Distributor/receive"],
+    ["Kirim Obat", "/Distributor/ship"],
   ];
   React.useEffect(() => {
     (async () => {
       setLoading(true);
       const cnt = await supplyChainContract.methods.fetchProductCount().call();
       setCount(cnt);
-     
+    
     })();
 
     (async () => {
@@ -45,7 +42,7 @@ export default function ReceiveThirdParty(props) {
           .fetchProductState(i)
           .call();
 
-        if (prodState === "2") {
+        if (prodState === "0") {
           const prodData = [];
           const a = await supplyChainContract.methods
             .fetchProductPart1(i, "product", 0)
@@ -62,33 +59,10 @@ export default function ReceiveThirdParty(props) {
           arr.push(prodData);
         }
       }
-      setAllReceiveProducts(arr);
+      setAllProducts(arr);
       setLoading(false);
     })();
   }, [count]);
-
-  const handleReceiveButton = async (id, long, lat) => {
-    try{
-      await supplyChainContract.methods
-      .receiveByThirdParty(parseInt(id), long, lat)
-      .send({ from: roles.thirdparty, gas: 1000000 })
-      .on("transactionHash", function (hash) {
-        handleSetTxhash(id, hash);
-      });
-    
-    setCount(0);
-    setOpen(false);
-    }catch{
-      setalertText("You are not the owner of the product");
-    }
-    
-  };
-
-  const handleSetTxhash = async (id, hash) => {
-    await supplyChainContract.methods
-      .setTransactionHash(id, hash)
-      .send({ from: roles.manufacturer, gas: 900000 });
-  };
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -102,17 +76,35 @@ export default function ReceiveThirdParty(props) {
     setPage(0);
   };
 
+  const [open, setOpen] = React.useState(false);
+  const [modalData, setModalData] = React.useState([]);
+
   const handleClose = () => setOpen(false);
 
   const handleClick = async (prod) => {
     await setModalData(prod);
-    
     setOpen(true);
+  };
+
+  const handleSetTxhash = async (id, hash) => {
+    await supplyChainContract.methods
+      .setTransactionHash(id, hash)
+      .send({ from: roles.manufacturer, gas: 900000 });
+  };
+
+  const handleBuyButton = async (id) => {
+    await supplyChainContract.methods
+      .purchaseByDistributor(id)
+      .send({ from: roles.distributor, gas: 1000000 })
+      .on("transactionHash", function (hash) {
+        handleSetTxhash(id, hash);
+      });
+    setCount(0);
   };
 
   return (
     <div classname={classes.pageWrap}>
-      <Navbar pageTitle={"Third Party"} navItems={navItem}>
+      <Navbar pageTitle={"Distributor"} navItems={navItem}>
         {loading ? (
           <Loader />
         ) : (
@@ -121,14 +113,10 @@ export default function ReceiveThirdParty(props) {
               prod={modalData}
               open={open}
               handleClose={handleClose}
-              handleReceiveButton={handleReceiveButton}
-              aText = {alertText}
             />
 
-            <h1 className={classes.pageHeading}>Products to be Received</h1>
-            <h3 className={classes.tableCount}>
-              Total : {allReceiveProducts.length}
-            </h3>
+            <h1 className={classes.pageHeading} style={{color:"#082616"}}>Daftar Obat</h1>
+            <h3 className={classes.tableCount} style={{color:"#082616"}}>Total : {allObats.length}</h3>
 
             <div>
               <Paper className={classes.TableRoot}>
@@ -137,19 +125,22 @@ export default function ReceiveThirdParty(props) {
                     <TableHead>
                       <TableRow>
                         <TableCell className={classes.TableHead} align="left">
-                          Universal ID
+                          ID
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Code
+                          Kode Obat
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacturer
+                          Manufacture
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacture Date
+                          Tanggal Produksi
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Name
+                          Nama Produk
+                        </TableCell>
+                        <TableCell className={classes.TableHead} align="center">
+                          Nomor Batch
                         </TableCell>
                         <TableCell
                           className={clsx(
@@ -158,19 +149,19 @@ export default function ReceiveThirdParty(props) {
                           )}
                           align="center"
                         >
-                          Owner
+                          Pemilik
                         </TableCell>
                         <TableCell
                           className={clsx(classes.TableHead)}
                           align="center"
                         >
-                          RECEIVE
+                          Beli
                         </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {allReceiveProducts.length !== 0 ? (
-                        allReceiveProducts
+                      {allObats.length !== 0 ? (
+                        allObats
                           .slice(
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
@@ -212,7 +203,7 @@ export default function ReceiveThirdParty(props) {
                                     align="center"
                                     onClick={() => handleClick(prod)}
                                   >
-                                    {d.toDateString() + " " + d.toTimeString()}
+                                    {d.toDateString()}
                                   </TableCell>
                                   <TableCell
                                     className={classes.TableCell}
@@ -220,6 +211,13 @@ export default function ReceiveThirdParty(props) {
                                     onClick={() => handleClick(prod)}
                                   >
                                     {prod[1][1]}
+                                  </TableCell>
+                                  <TableCell
+                                    className={classes.TableCell}
+                                    align="center"
+                                    onClick={() => handleClick(prod)}
+                                  >
+                                    {prod[1][3]}
                                   </TableCell>
                                   <TableCell
                                     className={clsx(
@@ -239,9 +237,12 @@ export default function ReceiveThirdParty(props) {
                                       type="submit"
                                       variant="contained"
                                       color="primary"
-                                      onClick={() => handleClick(prod)}
+                                      style={{backgroundColor: "#212e27"}}
+                                      onClick={() =>
+                                        handleBuyButton(prod[0][0])
+                                      }
                                     >
-                                      RECEIVE
+                                      BELI
                                     </Button>
                                   </TableCell>
                                 </TableRow>
@@ -257,7 +258,7 @@ export default function ReceiveThirdParty(props) {
                 <TablePagination
                   rowsPerPageOptions={[10, 25, 100]}
                   component="div"
-                  count={allReceiveProducts.length}
+                  count={allObats.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onChangePage={handleChangePage}
@@ -266,7 +267,7 @@ export default function ReceiveThirdParty(props) {
               </Paper>
             </div>
 
-            {/* {allReceiveProducts.length !== 0 ? (allReceiveProducts.map((prod) => (
+            {/* {allObats.length !== 0 ? (allObats.map((prod) => (
                 <>
                     <div>
                     <p>Universal ID : {prod[0][0]}</p>
@@ -283,9 +284,9 @@ export default function ReceiveThirdParty(props) {
                 type="submit"
                 variant="contained"
                 color="primary"
-                onClick={() => handleClick(prod)}
+                onClick={() => handleBuyButton(prod[0][0])}
             >
-                Recieve
+                BUY
             </Button>
                     </div>
                     

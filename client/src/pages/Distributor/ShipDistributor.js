@@ -15,7 +15,7 @@ import ProductModal from "../../components/Modal";
 import clsx from "clsx";
 import Loader from "../../components/Loader";
 
-export default function ShipDeliveryHub(props) {
+export default function ShipDistributor(props) {
   const classes = useStyles();
   const supplyChainContract = props.supplyChainContract;
   const { roles } = useRole();
@@ -23,8 +23,9 @@ export default function ShipDeliveryHub(props) {
   const [allSoldProducts, setAllSoldProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const navItem = [
-    ["Receive Product", "/DeliveryHub/receive"],
-    ["Ship Product", "/DeliveryHub/ship"],
+    ["Beli Obat", "/Distributor/allObats"],
+    ["Terima Obat", "/Distributor/receive"],
+    ["Kirim Obat", "/Distributor/ship"],
   ];
   const [alertText, setalertText] = React.useState("");
   React.useEffect(() => {
@@ -32,6 +33,7 @@ export default function ShipDeliveryHub(props) {
       setLoading(true);
       const cnt = await supplyChainContract.methods.fetchProductCount().call();
       setCount(cnt);
+      
     })();
 
     (async () => {
@@ -41,7 +43,7 @@ export default function ShipDeliveryHub(props) {
           .fetchProductState(i)
           .call();
 
-        if (prodState === "6") {
+        if (prodState === "4") {
           const prodData = [];
           const a = await supplyChainContract.methods
             .fetchProductPart1(i, "product", 0)
@@ -72,15 +74,16 @@ export default function ShipDeliveryHub(props) {
   const handleShipButton = async (id) => {
     try{
       await supplyChainContract.methods
-      .shipByDeliveryHub(id)
-      .send({ from: roles.deliveryhub, gas: 1000000 })
+      .shipByDistributor(id)
+      .send({ from: roles.distributor, gas: 1000000 })
       .on("transactionHash", function (hash) {
         handleSetTxhash(id, hash);
       });
-    setCount(0);
+     setCount(0);
     }catch{
-      setalertText("You are not the owner of the Product");
+      setalertText("Kamu Bukan Pemilik Produk Ini")
     }
+   
   };
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -103,11 +106,11 @@ export default function ShipDeliveryHub(props) {
     await setModalData(prod);
     setOpen(true);
   };
-
+  
   return (
     <>
       <div classname={classes.pageWrap}>
-        <Navbar pageTitle={"Delivery Hub"} navItems={navItem}>
+        <Navbar pageTitle={"Distributor"} navItems={navItem}>
           {loading ? (
             <Loader />
           ) : (
@@ -117,7 +120,7 @@ export default function ShipDeliveryHub(props) {
                 open={open}
                 handleClose={handleClose}
               />
-              <h1 className={classes.pageHeading}>Products To be Shipped</h1>
+              <h1 className={classes.pageHeading}>Obat Yang Dikirimkan</h1>
               <h3 className={classes.tableCount}>
                 Total : {allSoldProducts.length}
               </h3>
@@ -130,31 +133,37 @@ export default function ShipDeliveryHub(props) {
                       <TableHead>
                         <TableRow>
                           <TableCell className={classes.TableHead} align="left">
-                            Universal ID
+                            ID
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Code
+                            Kode Obat
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacturer
+                            Manufacture
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacture Date
+                            Tanggal Diterima
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Name
+                            Nama Obat
+                          </TableCell>
+                          <TableCell
+                            className={classes.TableHead}
+                            align="center"
+                          >
+                            Nomor Batch
                           </TableCell>
                           <TableCell
                             className={clsx(
@@ -163,13 +172,13 @@ export default function ShipDeliveryHub(props) {
                             )}
                             align="center"
                           >
-                            Owner
+                            Pembeli
                           </TableCell>
                           <TableCell
                             className={clsx(classes.TableHead)}
                             align="center"
                           >
-                            Ship
+                            Kirim
                           </TableCell>
                         </TableRow>
                       </TableHead>
@@ -217,9 +226,7 @@ export default function ShipDeliveryHub(props) {
                                       align="center"
                                       onClick={() => handleClick(prod)}
                                     >
-                                      {d.toDateString() +
-                                        " " +
-                                        d.toTimeString()}
+                                      {d.toDateString()}
                                     </TableCell>
                                     <TableCell
                                       className={classes.TableCell}
@@ -229,6 +236,13 @@ export default function ShipDeliveryHub(props) {
                                       {prod[1][1]}
                                     </TableCell>
                                     <TableCell
+                                      className={classes.TableCell}
+                                      align="center"
+                                      onClick={() => handleClick(prod)}
+                                    >
+                                      {prod[1][3]}
+                                    </TableCell>
+                                    <TableCell
                                       className={clsx(
                                         classes.TableCell,
                                         classes.AddressCell
@@ -236,7 +250,7 @@ export default function ShipDeliveryHub(props) {
                                       align="center"
                                       onClick={() => handleClick(prod)}
                                     >
-                                      {prod[0][2]}
+                                      {prod[2][4]}
                                     </TableCell>
                                     <TableCell
                                       className={clsx(classes.TableCell)}
@@ -246,11 +260,12 @@ export default function ShipDeliveryHub(props) {
                                         type="submit"
                                         variant="contained"
                                         color="primary"
+                                        style={{backgroundColor: "#212e27"}}
                                         onClick={() =>
                                           handleShipButton(prod[0][0])
                                         }
                                       >
-                                        SHIP
+                                        KIRIM
                                       </Button>
                                     </TableCell>
                                   </TableRow>

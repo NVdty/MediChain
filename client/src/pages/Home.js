@@ -33,7 +33,7 @@ export default function Home() {
             >
               <img
                 alt="."
-                src="/homeArt.png"
+                src="/leaf.png"
                 style={{ width: "90%", height: "auto" }}
               />
             </Grid>
@@ -52,8 +52,8 @@ export default function Home() {
                 flexDirection: "column",
               }}
             >
-              <div className={classes.HomeCardWrap}>
-                <h1 className={classes.pageHeading}>Assign Roles</h1>
+              <div className={classes.HomeCardWrap} style={{border: '2px solid #19452d'}}>
+                <h1 className={classes.pageHeading} style={{color:"#082616"}}>Wallet Address</h1>
                 <Link
                   to="/roleAdmin"
                   style={{ textDecoration: "none", color: "#fff" }}
@@ -62,14 +62,14 @@ export default function Home() {
                     className={classes.HomeBtn}
                     size="large"
                     variant="outlined"
-                    color="primary"
+                    style={{borderColor:"#19452d", color:"#19452d"}}
                   >
-                    Assign
+                    Tambah
                   </Button>
                 </Link>
                 <br />
 
-                <h1 className={classes.pageHeading}>Visit As</h1>
+                <h1 className={classes.pageHeading} style={{color:"#082616"}}>Kunjungi Sebagai</h1>
                 <Link
                   to="/manufacturer/manufacture"
                   style={{ textDecoration: "none", color: "#fff" }}
@@ -78,48 +78,48 @@ export default function Home() {
                     className={classes.HomeBtn}
                     size="large"
                     variant="outlined"
-                    color="primary"
+                    style={{borderColor:"#19452d", color:"#19452d"}}
                   >
                     Manufacturer
                   </Button>
                 </Link>
                 <Link
-                  to="/ThirdParty/allProducts"
+                  to="/Distributor/allObats"
                   style={{ textDecoration: "none", color: "#fff" }}
                 >
                   <Button
                     className={classes.HomeBtn}
                     size="large"
                     variant="outlined"
-                    color="primary"
+                    style={{borderColor:"#19452d", color:"#19452d"}}
                   >
-                    Third party
+                    Distibutor
                   </Button>
                 </Link>
                 <Link
-                  to="/DeliveryHub/receive"
+                  to="/Pengiriman/receive"
                   style={{ textDecoration: "none", color: "#fff" }}
                 >
                   <Button
                     className={classes.HomeBtn}
                     size="large"
                     variant="outlined"
-                    color="primary"
+                    style={{borderColor:"#19452d", color:"#19452d"}}
                   >
-                    delivery hub
+                    Pengiriman
                   </Button>
                 </Link>
                 <Link
-                  to="/Customer/buy"
+                  to="/Apotek/buy"
                   style={{ textDecoration: "none", color: "#fff" }}
                 >
                   <Button
                     className={classes.HomeBtn}
                     size="large"
                     variant="outlined"
-                    color="primary"
+                    style={{borderColor:"#19452d", color:"#19452d"}}
                   >
-                    customer
+                    Apotek
                   </Button>
                 </Link>
               </div>

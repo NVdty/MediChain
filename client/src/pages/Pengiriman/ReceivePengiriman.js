@@ -15,7 +15,7 @@ import { useStyles } from "../../components/Styles";
 import clsx from "clsx";
 import Loader from "../../components/Loader";
 
-export default function ReceiveCustomer(props) {
+export default function ReceivePengiriman(props) {
   const supplyChainContract = props.supplyChainContract;
   const { roles } = useRole();
   const [count, setCount] = React.useState(0);
@@ -25,9 +25,8 @@ export default function ReceiveCustomer(props) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const navItem = [
-    ["Purchase Product", "/Customer/buy"],
-    ["Receive Product", "/Customer/receive"],
-    ["Your Products", "/Customer/allReceived"],
+    ["Pengiriman Obat", "/Pengiriman/receive"],
+    ["Kirim Obat", "/Pengiriman/ship"],
   ];
   const [alertText, setalertText] = React.useState("");
   React.useEffect(() => {
@@ -44,7 +43,7 @@ export default function ReceiveCustomer(props) {
           .fetchProductState(i)
           .call();
 
-        if (prodState === "7") {
+        if (prodState === "5") {
           const prodData = [];
           const a = await supplyChainContract.methods
             .fetchProductPart1(i, "product", 0)
@@ -66,26 +65,26 @@ export default function ReceiveCustomer(props) {
     })();
   }, [count]);
 
-  const handleReceiveButton = async (id) => {
-    try{
-      await supplyChainContract.methods
-      .receiveByCustomer(parseInt(id))
-      .send({ from: roles.customer, gas: 1000000 })
-      .on("transactionHash", function (hash) {
-        handleSetTxhash(id, hash);
-      });
-    setCount(0);
-    setOpen(false);
-    }catch{
-      setalertText("You are not the owner of the Product");
-    }
-    
-  };
-
   const handleSetTxhash = async (id, hash) => {
     await supplyChainContract.methods
       .setTransactionHash(id, hash)
       .send({ from: roles.manufacturer, gas: 900000 });
+  };
+
+  const handleReceiveButton = async (id, long, lat) => {
+    try{
+      await supplyChainContract.methods
+      .receiveByPengiriman(parseInt(id), long, lat)
+      .send({ from: roles.pengiriman, gas: 1000000 })
+      .on("transactionHash", function (hash) {
+        handleSetTxhash(id, hash);
+      });
+     setCount(0);
+     setOpen(false);
+    }catch{
+      setalertText("Kamu Bukan Pemilik Produk Ini");
+    }
+    
   };
 
   const [page, setPage] = React.useState(0);
@@ -104,12 +103,13 @@ export default function ReceiveCustomer(props) {
 
   const handleClick = async (prod) => {
     await setModalData(prod);
+    
     setOpen(true);
   };
 
   return (
     <div classname={classes.pageWrap}>
-      <Navbar pageTitle={"Customer"} navItems={navItem}>
+      <Navbar pageTitle={"Pengiriman"} navItems={navItem}>
         {loading ? (
           <Loader />
         ) : (
@@ -122,7 +122,7 @@ export default function ReceiveCustomer(props) {
               aText={alertText}
             />
 
-            <h1 className={classes.pageHeading}>Products to be Received</h1>
+            <h1 className={classes.pageHeading}>Pesanan Pengiriman Obat</h1>
             <h3 className={classes.tableCount}>
               Total : {allReceiveProducts.length}
             </h3>
@@ -134,19 +134,19 @@ export default function ReceiveCustomer(props) {
                     <TableHead>
                       <TableRow>
                         <TableCell className={classes.TableHead} align="left">
-                          Universal ID
+                          ID
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Code
+                          Kode Obat
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacturer
+                          Tanggal Diterima
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacture Date
+                          Nama Obat
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Name
+                          Nomor Batch
                         </TableCell>
                         <TableCell
                           className={clsx(
@@ -155,13 +155,13 @@ export default function ReceiveCustomer(props) {
                           )}
                           align="center"
                         >
-                          Owner
+                          Pemilik
                         </TableCell>
                         <TableCell
                           className={clsx(classes.TableHead)}
                           align="center"
                         >
-                          RECEIVE
+                          Terima
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -199,17 +199,10 @@ export default function ReceiveCustomer(props) {
                                     {prod[1][2]}
                                   </TableCell>
                                   <TableCell
-                                    className={classes.TableCell}
                                     align="center"
                                     onClick={() => handleClick(prod)}
                                   >
-                                    {prod[0][4]}
-                                  </TableCell>
-                                  <TableCell
-                                    align="center"
-                                    onClick={() => handleClick(prod)}
-                                  >
-                                    {d.toDateString() + " " + d.toTimeString()}
+                                    {d.toDateString()}
                                   </TableCell>
                                   <TableCell
                                     className={classes.TableCell}
@@ -217,6 +210,13 @@ export default function ReceiveCustomer(props) {
                                     onClick={() => handleClick(prod)}
                                   >
                                     {prod[1][1]}
+                                  </TableCell>
+                                  <TableCell
+                                    className={classes.TableCell}
+                                    align="center"
+                                    onClick={() => handleClick(prod)}
+                                  >
+                                    {prod[1][3]}
                                   </TableCell>
                                   <TableCell
                                     className={clsx(
@@ -236,9 +236,10 @@ export default function ReceiveCustomer(props) {
                                       type="submit"
                                       variant="contained"
                                       color="primary"
+                                      style={{backgroundColor: "#212e27"}}
                                       onClick={() => handleClick(prod)}
                                     >
-                                      RECEIVE
+                                      TERIMA
                                     </Button>
                                   </TableCell>
                                 </TableRow>

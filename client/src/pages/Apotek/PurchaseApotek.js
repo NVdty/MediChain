@@ -15,25 +15,23 @@ import ProductModal from "../../components/Modal";
 import clsx from "clsx";
 import Loader from "../../components/Loader";
 
-export default function ShipThirdParty(props) {
+export default function PurchaseApotek(props) {
   const classes = useStyles();
   const supplyChainContract = props.supplyChainContract;
   const { roles } = useRole();
   const [count, setCount] = React.useState(0);
-  const [allSoldProducts, setAllSoldProducts] = React.useState([]);
+  const [allObats, setAllProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const navItem = [
-    ["Buy Product", "/ThirdParty/allProducts"],
-    ["Receive Product", "/ThirdParty/receive"],
-    ["Ship Products", "/ThirdParty/ship"],
+    ["Beli Obat", "/Apotek/buy"],
+    ["Terima Obat", "/Apotek/receive"],
+    ["Daftar Obat", "/Apotek/allReceived"],
   ];
-  const [alertText, setalertText] = React.useState("");
   React.useEffect(() => {
     (async () => {
       setLoading(true);
       const cnt = await supplyChainContract.methods.fetchProductCount().call();
       setCount(cnt);
-      
     })();
 
     (async () => {
@@ -43,7 +41,7 @@ export default function ShipThirdParty(props) {
           .fetchProductState(i)
           .call();
 
-        if (prodState === "4") {
+        if (prodState === "3") {
           const prodData = [];
           const a = await supplyChainContract.methods
             .fetchProductPart1(i, "product", 0)
@@ -60,31 +58,10 @@ export default function ShipThirdParty(props) {
           arr.push(prodData);
         }
       }
-      setAllSoldProducts(arr);
+      setAllProducts(arr);
       setLoading(false);
     })();
   }, [count]);
-
-  const handleSetTxhash = async (id, hash) => {
-    await supplyChainContract.methods
-      .setTransactionHash(id, hash)
-      .send({ from: roles.manufacturer, gas: 900000 });
-  };
-
-  const handleShipButton = async (id) => {
-    try{
-      await supplyChainContract.methods
-      .shipByThirdParty(id)
-      .send({ from: roles.thirdparty, gas: 1000000 })
-      .on("transactionHash", function (hash) {
-        handleSetTxhash(id, hash);
-      });
-     setCount(0);
-    }catch{
-      setalertText("You are not the owner of the Product")
-    }
-   
-  };
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -106,11 +83,27 @@ export default function ShipThirdParty(props) {
     await setModalData(prod);
     setOpen(true);
   };
-  
+
+  const handleBuyButton = async (id) => {
+    await supplyChainContract.methods
+      .purchaseByApotek(id)
+      .send({ from: roles.apotek, gas: 1000000 })
+      .on("transactionHash", function (hash) {
+        handleSetTxhash(id, hash);
+      });
+    setCount(0);
+  };
+
+  const handleSetTxhash = async (id, hash) => {
+    await supplyChainContract.methods
+      .setTransactionHash(id, hash)
+      .send({ from: roles.manufacturer, gas: 900000 });
+  };
+
   return (
     <>
       <div classname={classes.pageWrap}>
-        <Navbar pageTitle={"Third Party"} navItems={navItem}>
+        <Navbar pageTitle={"Apotek"} navItems={navItem}>
           {loading ? (
             <Loader />
           ) : (
@@ -120,44 +113,56 @@ export default function ShipThirdParty(props) {
                 open={open}
                 handleClose={handleClose}
               />
-              <h1 className={classes.pageHeading}>Products To be Shipped</h1>
+
+              <h1 className={classes.pageHeading}>Pembelian Obat</h1>
               <h3 className={classes.tableCount}>
-                Total : {allSoldProducts.length}
+                Total : {allObats.length}
               </h3>
 
               <div>
-              <p><b style={{ color: "red" }}>{alertText.length !== 0 ? alertText : ""}</b></p>
                 <Paper className={classes.TableRoot}>
                   <TableContainer className={classes.TableContainer}>
                     <Table stickyHeader aria-label="sticky table">
                       <TableHead>
                         <TableRow>
                           <TableCell className={classes.TableHead} align="left">
-                            Universal ID
+                            ID
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Code
+                            Kode Produk
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacturer
+                            Manufacture
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacture Date
+                            Tanggal Produksi
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Name
+                            Kategori Obat
+                          </TableCell>
+                          <TableCell
+                            className={classes.TableHead}
+                            align="center"
+                          >
+                            Nama Obat
+                          </TableCell>
+                          <TableCell
+                            className={classes.TableHead}
+                            align="center"
+                          >
+                            Nomor Batch
                           </TableCell>
                           <TableCell
                             className={clsx(
@@ -166,19 +171,19 @@ export default function ShipThirdParty(props) {
                             )}
                             align="center"
                           >
-                            Owner
+                            Pemilik
                           </TableCell>
                           <TableCell
                             className={clsx(classes.TableHead)}
                             align="center"
                           >
-                            Ship
+                            Beli
                           </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {allSoldProducts.length !== 0 ? (
-                          allSoldProducts
+                        {allObats.length !== 0 ? (
+                          allObats
                             .slice(
                               page * rowsPerPage,
                               page * rowsPerPage + rowsPerPage
@@ -220,9 +225,14 @@ export default function ShipThirdParty(props) {
                                       align="center"
                                       onClick={() => handleClick(prod)}
                                     >
-                                      {d.toDateString() +
-                                        " " +
-                                        d.toTimeString()}
+                                      {d.toDateString()}
+                                    </TableCell>
+                                    <TableCell
+                                      className={classes.TableCell}
+                                      align="center"
+                                      onClick={() => handleClick(prod)}
+                                    >
+                                      {prod[1][4]}
                                     </TableCell>
                                     <TableCell
                                       className={classes.TableCell}
@@ -230,6 +240,13 @@ export default function ShipThirdParty(props) {
                                       onClick={() => handleClick(prod)}
                                     >
                                       {prod[1][1]}
+                                    </TableCell>
+                                    <TableCell
+                                      className={classes.TableCell}
+                                      align="center"
+                                      onClick={() => handleClick(prod)}
+                                    >
+                                      {prod[1][3]}
                                     </TableCell>
                                     <TableCell
                                       className={clsx(
@@ -249,11 +266,12 @@ export default function ShipThirdParty(props) {
                                         type="submit"
                                         variant="contained"
                                         color="primary"
+                                        style={{backgroundColor: "#212e27"}}
                                         onClick={() =>
-                                          handleShipButton(prod[0][0])
+                                          handleBuyButton(prod[0][0])
                                         }
                                       >
-                                        SHIP
+                                        BELI
                                       </Button>
                                     </TableCell>
                                   </TableRow>
@@ -269,7 +287,7 @@ export default function ShipThirdParty(props) {
                   <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={allSoldProducts.length}
+                    count={allObats.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

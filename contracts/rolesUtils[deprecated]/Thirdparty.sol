@@ -9,10 +9,10 @@ contract Thirdparty {
   event ThirdpartyAdded(address indexed _account);
   event ThirdpartyRemoved(address indexed _account);
 
-  Roles.Role private thirdpartysList;
+  Roles.Role private distributorsList;
 
   constructor() public {
-    thirdpartysList.addRole(msg.sender);
+    distributorsList.addRole(msg.sender);
     emit ThirdpartyAdded(msg.sender);
   }
 
@@ -25,16 +25,16 @@ contract Thirdparty {
 
   ///@dev Thirdparty Utility functions.
   function isThirdparty(address _account) public view returns (bool) {
-    return thirdpartysList.hasRole(_account);
+    return distributorsList.hasRole(_account);
   }
 
   function addThirdparty(address _account) public onlyThirdparty {
-    thirdpartysList.addRole(_account);
+    distributorsList.addRole(_account);
     emit ThirdpartyAdded(_account);
   }
 
   function removeThirdparty() public {
-    thirdpartysList.removeRole(msg.sender);
+    distributorsList.removeRole(msg.sender);
     emit ThirdpartyRemoved(msg.sender);
   }
   /*-----------------------------*/

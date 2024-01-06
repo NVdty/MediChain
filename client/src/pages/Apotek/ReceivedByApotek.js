@@ -13,16 +13,16 @@ import ProductModal from "../../components/Modal";
 import clsx from "clsx";
 import Loader from "../../components/Loader";
 
-export default function ReceivedByCustomer(props) {
+export default function ReceivedByApotek(props) {
   const classes = useStyles();
   const supplyChainContract = props.supplyChainContract;
   const [count, setCount] = React.useState(0);
   const [allReceived, setAllReceived] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const navItem = [
-    ["Purchase Product", "/Customer/buy"],
-    ["Receive Product", "/Customer/receive"],
-    ["Your Products", "/Customer/allReceived"],
+    ["Beli Obat", "/Apotek/buy"],
+    ["Terima Obat", "/Apotek/receive"],
+    ["Daftar Obat", "/Apotek/allReceived"],
   ];
   React.useEffect(() => {
     (async () => {
@@ -85,7 +85,7 @@ export default function ReceivedByCustomer(props) {
   return (
     <>
       <div classname={classes.pageWrap}>
-        <Navbar pageTitle={"Customer"} navItems={navItem}>
+        <Navbar pageTitle={"Apotek"} navItems={navItem}>
           {loading ? (
             <Loader />
           ) : (
@@ -95,7 +95,7 @@ export default function ReceivedByCustomer(props) {
                 open={open}
                 handleClose={handleClose}
               />
-              <h1 className={classes.pageHeading}>Your Products</h1>
+              <h1 className={classes.pageHeading}>Daftar Obat</h1>
               <h3 className={classes.tableCount}>
                 Total : {allReceived.length}
               </h3>
@@ -110,40 +110,49 @@ export default function ReceivedByCustomer(props) {
                               className={classes.TableHead}
                               align="left"
                             >
-                              Universal ID
+                              ID
                             </TableCell>
                             <TableCell
                               className={classes.TableHead}
                               align="center"
                             >
-                              Product Code
+                              Kode Obat
                             </TableCell>
                             <TableCell
                               className={classes.TableHead}
                               align="center"
                             >
-                              Manufacturer
+                              Manufacture
                             </TableCell>
                             <TableCell
                               className={classes.TableHead}
                               align="center"
                             >
-                              Manufacture Date
+                              Tanggal Produksi
                             </TableCell>
                             <TableCell
                               className={classes.TableHead}
                               align="center"
                             >
-                              Product Name
+                              Tanggal Diterima
                             </TableCell>
                             <TableCell
-                              className={clsx(
-                                classes.TableHead,
-                                classes.AddressCell
-                              )}
+                              className={classes.TableHead}
                               align="center"
                             >
-                              Owner
+                              Kategori Obat
+                            </TableCell>
+                            <TableCell
+                              className={classes.TableHead}
+                              align="center"
+                            >
+                              Nama Obat
+                            </TableCell>
+                            <TableCell
+                              className={classes.TableHead}
+                              align="center"
+                            >
+                              Nomor Batch
                             </TableCell>
                           </TableRow>
                         </TableHead>
@@ -185,24 +194,32 @@ export default function ReceivedByCustomer(props) {
                                       {prod[0][4]}
                                     </TableCell>
                                     <TableCell align="center">
-                                      {d.toDateString() +
-                                        " " +
-                                        d.toTimeString()}
+                                      {d.toDateString()}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                      {d.toDateString()}
+                                    </TableCell>
+                                    
+                                    <TableCell
+                                      className={classes.TableCell}
+                                      align="center"
+                                      onClick={() => handleClick(prod)}
+                                    >
+                                      {prod[1][4]}
                                     </TableCell>
                                     <TableCell
                                       className={classes.TableCell}
                                       align="center"
+                                      onClick={() => handleClick(prod)}
                                     >
                                       {prod[1][1]}
                                     </TableCell>
                                     <TableCell
-                                      className={clsx(
-                                        classes.TableCell,
-                                        classes.AddressCell
-                                      )}
-                                      align="left"
+                                      className={classes.TableCell}
+                                      align="center"
+                                      onClick={() => handleClick(prod)}
                                     >
-                                      {prod[0][2]}
+                                      {prod[1][3]}
                                     </TableCell>
                                   </TableRow>
                                 );

@@ -49,107 +49,79 @@ export default function ProductModal({
                 <h1 className={classes.pageHeading}>Details</h1>
                 <div>
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Universal ID: </div>
+                    <div className={classes.dCol1}>ID: </div>
                     <div className={classes.dCol2}>{prod[0][0]}</div>
                   </div>
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>SKU:</div>{" "}
-                    <div className={classes.dCol2}> {prod[0][1]}</div>
-                  </div>
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Owner: </div>{" "}
+                    <div className={classes.dCol1}>Pemilik: </div>{" "}
                     <div className={classes.dCol2}>{prod[0][2]}</div>
                   </div>
-
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Manufacturer:</div>{" "}
-                    <div className={classes.dCol2}>{prod[0][3]}</div>
-                  </div>
-
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Name of Manufacturer:</div>{" "}
-                    <div className={classes.dCol2}> {prod[0][4]}</div>
-                  </div>
-
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Manufactured date:</div>{" "}
-                    <div className={classes.dCol2}>
-                      {new Date(parseInt(prod[1][0] * 1000)).toDateString() +
-                        " " +
-                        new Date(parseInt(prod[1][0] * 1000)).toTimeString()}
-                    </div>
-                  </div>
-
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>
-                      Details of Manufacturer:
-                    </div>{" "}
-                    <div className={classes.dCol2}> {prod[0][5]}</div>
-                  </div>
-
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>
-                      Longitude of Manufature:{" "}
-                    </div>{" "}
-                    <div className={classes.dCol2}>{prod[0][6]}</div>
-                  </div>
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Latitude of Manufature:</div>{" "}
-                    <div className={classes.dCol2}>{prod[0][7]}</div>
-                  </div>
-
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Product Name: </div>{" "}
-                    <div className={classes.dCol2}>{prod[1][1]}</div>
-                  </div>
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Product Code:</div>{" "}
-                    <div className={classes.dCol2}>{prod[1][2]}</div>
-                  </div>
-
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Product Price: </div>{" "}
-                    <div className={classes.dCol2}>{prod[1][3]}</div>
-                  </div>
-
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}> Product Category: </div>
-                    <div className={classes.dCol2}>{prod[1][4]}</div>
-                  </div>
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Product State: </div>{" "}
-                    <div className={classes.dCol2}>{prod[1][5]}</div>
-                  </div>
-                  <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Third Party Address: </div>{" "}
+                    <div className={classes.dCol1}>Address Distibutor: </div>{" "}
                     <div className={classes.dCol2}>{prod[1][6]}</div>
                   </div>
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Third Party Longitude: </div>{" "}
+                    <div className={classes.dCol1}>Distibutor Longitude: </div>{" "}
                     <div className={classes.dCol2}>{prod[1][7]}</div>
                   </div>
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Third Party Latitude: </div>{" "}
+                    <div className={classes.dCol1}>Distibutor Latitude: </div>{" "}
                     <div className={classes.dCol2}>{prod[2][0]}</div>
                   </div>
 
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Delivery Hub Address:</div>{" "}
+                    <div className={classes.dCol1}>Address Pengiriman:</div>{" "}
                     <div className={classes.dCol2}> {prod[2][1]}</div>
                   </div>
                   <div className={classes.dRow}>
                     <div className={classes.dCol1}>
-                      Delivery Hub Longitude:{" "}
+                      Pengiriman Longitude:{" "}
                     </div>{" "}
                     <div className={classes.dCol2}>{prod[2][2]}</div>
                   </div>
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Delivery Hub Latitude:</div>{" "}
+                    <div className={classes.dCol1}>Pengiriman Latitude:</div>{" "}
                     <div className={classes.dCol2}> {prod[2][3]}</div>
                   </div>
                   <div className={classes.dRow}>
-                    <div className={classes.dCol1}>Customer Address: </div>{" "}
+                    <div className={classes.dCol1}>Address Apotek: </div>{" "}
                     <div className={classes.dCol2}>{prod[2][4]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}>Nama Manufacture:</div>{" "}
+                    <div className={classes.dCol2}> {prod[0][4]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}>
+                      Manufacture Longitude:{" "}
+                    </div>{" "}
+                    <div className={classes.dCol2}>{prod[0][6]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}>Manufacture Latitude:</div>{" "}
+                    <div className={classes.dCol2}>{prod[0][7]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}>Kode Obat:</div>{" "}
+                    <div className={classes.dCol2}>{prod[1][2]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}> Kategori Obat: </div>
+                    <div className={classes.dCol2}>{prod[1][4]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}>Nama Obat: </div>{" "}
+                    <div className={classes.dCol2}>{prod[1][1]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}>Nomor Batch: </div>{" "}
+                    <div className={classes.dCol2}>{prod[1][3]}</div>
+                  </div>
+                  <div className={classes.dRow}>
+                    <div className={classes.dCol1}>
+                      Keterangan:
+                    </div>{" "}
+                    <div className={classes.dCol2}> {prod[0][5]}</div>
                   </div>
                   <div className={classes.dRow}>
                     <div className={classes.dCol1}>Tx Hash: </div>{" "}
@@ -196,7 +168,7 @@ export default function ProductModal({
                           type="submit"
                           variant="contained"
                           color="primary"
-                          style={{ margin: 10 }}
+                          style={{ margin: 10, backgroundColor: "#212e27" }}
                           onClick={() =>
                             handleReceiveButton(
                               prod[0][0],
@@ -205,7 +177,7 @@ export default function ProductModal({
                             )
                           }
                         >
-                          Recieve
+                          Terima
                         </Button>
                         <p><b style={{ color: "red" }}>{aText.length !== 0 ? aText : ""}</b></p>
                       </>

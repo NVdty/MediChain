@@ -3,39 +3,39 @@ pragma solidity >=0.4.21 <0.9.0;
 
 import "./Roles.sol";
 
-contract DeliveryHub {
+contract Pengiriman {
   using Roles for Roles.Role;
 
-  event DeliveryHubAdded(address indexed _account);
-  event DeliveryHubRemoved(address indexed _account);
+  event PengirimanAdded(address indexed _account);
+  event PengirimanRemoved(address indexed _account);
 
   Roles.Role private deliveryHubsList;
 
   constructor() public {
     deliveryHubsList.addRole(msg.sender);
-    emit DeliveryHubAdded(msg.sender);
+    emit PengirimanAdded(msg.sender);
   }
 
-  ///@dev Modifiers for DeliveryHub.
-  modifier onlyDeliveryHub() {
-    require(isDeliveryHub(msg.sender));
+  ///@dev Modifiers for Pengiriman.
+  modifier onlyPengiriman() {
+    require(isPengiriman(msg.sender));
     _;
   }
   /*-----------------------------*/
 
-  ///@dev DeliveryHub Utility functions.
-  function isDeliveryHub(address _account) public view returns (bool) {
+  ///@dev Pengiriman Utility functions.
+  function isPengiriman(address _account) public view returns (bool) {
     return deliveryHubsList.hasRole(_account);
   }
 
-  function addDeliveryHub(address _account) public onlyDeliveryHub {
+  function addPengiriman(address _account) public onlyPengiriman {
     deliveryHubsList.addRole(_account);
-    emit DeliveryHubAdded(_account);
+    emit PengirimanAdded(_account);
   }
 
-  function removeDeliveryHub() public {
+  function removePengiriman() public {
     deliveryHubsList.removeRole(msg.sender);
-    emit DeliveryHubRemoved(msg.sender);
+    emit PengirimanRemoved(msg.sender);
   }
   /*-----------------------------*/
 

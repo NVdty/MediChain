@@ -20,9 +20,9 @@ export default function AllManufacture(props) {
   const [allManufacture, setAllManufacture] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const navItem = [
-    ["Add Product", "/manufacturer/manufacture"],
-    ["Ship Product", "/manufacturer/ship"],
-    ["All Products", "/manufacturer/allManufacture"],
+    ["Data Obat", "/manufacturer/manufacture"],
+    ["Kirim Obat", "/manufacturer/ship"],
+    ["Daftar Obat", "/manufacturer/allManufacture"],
   ];
   React.useEffect(() => {
     setLoading(true);
@@ -85,7 +85,7 @@ export default function AllManufacture(props) {
 
   return (
     <div classname={classes.pageWrap}>
-      <Navbar pageTitle={"Manufacturer"} navItems={navItem}>
+      <Navbar pageTitle={"Manufacture"} navItems={navItem}>
         {loading ? (
           <Loader />
         ) : (
@@ -95,8 +95,8 @@ export default function AllManufacture(props) {
               open={open}
               handleClose={handleClose}
             />
-            <h1 className={classes.pageHeading}>Manufactured Products</h1>
-            <h3 className={classes.tableCount}>
+            <h1 className={classes.pageHeading} style={{color:"#082616"}}>Daftar Obat</h1>
+            <h3 className={classes.tableCount} style={{color:"#082616"}}>
               Total : {allManufacture.length}
             </h3>
             <>
@@ -107,31 +107,37 @@ export default function AllManufacture(props) {
                       <TableHead>
                         <TableRow>
                           <TableCell className={classes.TableHead} align="left">
-                            Universal ID
+                            ID
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Code
+                            Kode Produk
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacturer
+                            Manufacture
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Manufacture Date
+                            Tanggal Produksi
                           </TableCell>
                           <TableCell
                             className={classes.TableHead}
                             align="center"
                           >
-                            Product Name
+                            Nama Obat
+                          </TableCell>
+                          <TableCell
+                            className={classes.TableHead}
+                            align="center"
+                          >
+                            Nomor Batch
                           </TableCell>
                           <TableCell
                             className={clsx(
@@ -140,7 +146,7 @@ export default function AllManufacture(props) {
                             )}
                             align="center"
                           >
-                            Owner
+                            Pemilik
                           </TableCell>
                         </TableRow>
                       </TableHead>
@@ -182,13 +188,19 @@ export default function AllManufacture(props) {
                                     {prod[0][4]}
                                   </TableCell>
                                   <TableCell align="center">
-                                    {d.toDateString() + " " + d.toTimeString()}
+                                    {d.toDateString()}
                                   </TableCell>
                                   <TableCell
                                     className={classes.TableCell}
                                     align="center"
                                   >
                                     {prod[1][1]}
+                                  </TableCell>
+                                  <TableCell
+                                    className={classes.TableCell}
+                                    align="center"
+                                  >
+                                    {prod[1][3]}
                                   </TableCell>
                                   <TableCell
                                     className={clsx(

@@ -17,25 +17,25 @@ import { useStyles } from "../components/Styles";
 import Loader from "../components/Loader";
 
 const columns = [
-  { id: "id", label: "Universal ID", minWidth: 170 },
+  { id: "id", label: "ID", minWidth: 170 },
   { id: "mname", label: "Manfacturer", minWidth: 170 },
-  { id: "mdate", label: "Date", minWidth: 170 },
-  { id: "pname", label: "Product Name", minWidth: 170 },
-  { id: "price", label: "Price", minWidth: 170 },
-  { id: "owner", label: "Owner", minWidth: 170 },
-  { id: "lastAction", label: "Last Action", minWidth: 170 },
+  { id: "mdate", label: "Tanggal", minWidth: 170 },
+  { id: "pcat", label: "Kategori Obat", minWidth: 170 },
+  { id: "pname", label: "Nama Obat", minWidth: 170 },
+  { id: "price", label: "Nomor Batch", minWidth: 170 },
+  { id: "lastAction", label: "Aktifitas Terakhir", minWidth: 170 },
 ];
 
 const map = [
-  "Manufactured",
-  "Bought By Third Party",
-  "Shipped From Manufacturer",
-  "Received By Third Party",
-  "Bought By Customer",
-  "Shipped By Third Party",
-  "Received at DeliveHub",
-  "Shipped From DeliveryHub",
-  "Received By Customer",
+  "Obat Dibuat",
+  "Dibeli Oleh Distributor",
+  "Dikirim Oleh Manufacture",
+  "Diterima Oleh Distributor",
+  "Dibeli Oleh Apotek",
+  "Dikirim Oleh Manufacture",
+  "Diterima Oleh Pengiriman",
+  "Dikirim Oleh Pengiriman",
+  "Diterima Oleh Apotek",
 ];
 
 export default function Explorer(props) {
@@ -134,7 +134,7 @@ export default function Explorer(props) {
               openRecipt={openRecipt}
               handleCloseRecipt={handleCloseRecipt}
             />
-            <h1 className={classes.pageHeading}>Search a product</h1>
+            <h1 className={classes.pageHeading}>Cari Obat</h1>
             <CustomizedInputBase findProduct={findProduct} />
             {productData.length !== 0 ? (
               <>
@@ -143,31 +143,31 @@ export default function Explorer(props) {
                     <Paper className={classes.ProductPaper}>
                       <div>
                         <div className={classes.ExplorerdRow}>
-                          Universal ID : {productData[0][0]}
+                          ID : {productData[0][0]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          SKU : {productData[0][1]}
+                          Pemilik : {productData[0][2]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          Owner : {productData[0][2]}
+                          Manufacture : {productData[0][3]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          Manufacturer : {productData[0][3]}
+                          Nama Manufacture : {productData[0][4]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          Name of Manufacturer : {productData[0][4]}
+                          Longitude Manufacture : {productData[0][6]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          Details of Manufacturer : {productData[0][5]}
+                          Latitude of Manfacturer : {productData[0][7]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          Longitude of Manufature : {productData[0][6]}
+                          Kategori Obat : {productData[1][4]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          Latitude of Manufature : {productData[0][7]}
+                          Nama Obat : {productData[1][1]}
                         </div>
                         <div className={classes.ExplorerdRow}>
-                          Manufactured date : {productData[1][0]}
+                          Nomor Obat : {productData[1][3]}
                         </div>
 
                         <Button
@@ -175,7 +175,7 @@ export default function Explorer(props) {
                           variant="contained"
                           color="primary"
                           onClick={() => handleClick(productData)}
-                          style={{ margin: "10px auto" }}
+                          style={{ margin: "10px auto", backgroundColor: "#212e27" }}
                         >
                           MORE DETAILS
                         </Button>
@@ -187,7 +187,7 @@ export default function Explorer(props) {
                   </Grid>
                 </Grid>
                 <br />
-                <h2 className={classes.tableCount}> Product History</h2>
+                <h2 className={classes.tableCount}> History</h2>
                 <Paper className={classes.TableRoot2}>
                   <TableContainer className={classes.TableContainer}>
                     <Table stickyHeader aria-label="sticky table">
@@ -203,12 +203,6 @@ export default function Explorer(props) {
                               {column.label}
                             </TableCell>
                           ))}
-                          <TableCell
-                            align="center"
-                            className={classes.TableHead}
-                          >
-                            Details
-                          </TableCell>
                           <TableCell
                             align="center"
                             className={classes.TableHead}
@@ -249,7 +243,14 @@ export default function Explorer(props) {
                                   align="center"
                                   onClick={() => handleClick(row)}
                                 >
-                                  {d.toDateString() + " " + d.toTimeString()}
+                                  {d.toDateString()}
+                                </TableCell>
+                                <TableCell
+                                  className={classes.TableCell}
+                                  align="center"
+                                  onClick={() => handleClick(row)}
+                                >
+                                  {row[1][4]}
                                 </TableCell>
                                 <TableCell
                                   className={classes.TableCell}
@@ -266,17 +267,6 @@ export default function Explorer(props) {
                                   {row[1][3]}
                                 </TableCell>
                                 <TableCell
-                                  className={classes.TableCell}
-                                  align="center"
-                                  onClick={() => handleClick(row)}
-                                >
-                                  {/* {row[0][2]} */}
-                                  {row[0][2].length > 15
-                                    ? row[0][2].substring(0, 15) + "..."
-                                    : row[0][2]}
-                                </TableCell>
-
-                                <TableCell
                                   style={{ color: "#f00 !important" }}
                                   className={classes.TableCell}
                                   align="center"
@@ -292,20 +282,7 @@ export default function Explorer(props) {
                                     type="submit"
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handleClick(row)}
-                                  >
-                                    DETAILS
-                                  </Button>
-                                </TableCell>
-
-                                <TableCell
-                                  className={classes.TableCell}
-                                  align="center"
-                                >
-                                  <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
+                                    style={{backgroundColor: "#212e27"}}
                                     onClick={() => fetchTxRecipt(row[2][5])}
                                   >
                                     RECIPT
@@ -323,7 +300,7 @@ export default function Explorer(props) {
                 </Paper>
               </>
             ) : (
-              <>{Text ? <p>Product Not Found</p> : <></>}</>
+              <>{Text ? <p>Produk Tidak Ditemukan</p> : <></>}</>
             )}
           </>
         )}

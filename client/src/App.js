@@ -11,14 +11,14 @@ import AllManufacture from "./pages/Manufacturer/AllManufacture";
 import ShipManufacture from "./pages/Manufacturer/ShipManufacture";
 
 import "./App.css";
-import ReceiveThirdParty from "./pages/ThirdParty/ReceiveThirdParty";
-import PurchaseCustomer from "./pages/Customer/PurchaseCustomer";
-import ShipThirdParty from "./pages/ThirdParty/ShipThirdParty";
-import ReceiveDeliveryHub from "./pages/DeliveryHub/ReceiveDeliveryHub";
-import ShipDeliveryHub from "./pages/DeliveryHub/ShipDeliveryHub";
-import ReceiveCustomer from "./pages/Customer/ReceiveCustomer";
-import ReceivedByCustomer from "./pages/Customer/ReceivedByCustomer";
-import PurchaseThirdParty from "./pages/ThirdParty/PurshaseThirdParty";
+import ReceiveDistributor from "./pages/Distributor/ReceiveDistributor";
+import PurchaseApotek from "./pages/Apotek/PurchaseApotek";
+import ShipDistributor from "./pages/Distributor/ShipDistributor";
+import ReceivePengiriman from "./pages/Pengiriman/ReceivePengiriman";
+import ShipPengiriman from "./pages/Pengiriman/ShipPengiriman";
+import ReceiveApotek from "./pages/Apotek/ReceiveApotek";
+import ReceivedByApotek from "./pages/Apotek/ReceivedByApotek";
+import PurchaseDistributor from "./pages/Distributor/PurshaseDistributor";
 import RoleAdmin from "./pages/RoleAdmin";
 
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -98,45 +98,45 @@ class App extends Component {
               <ShipManufacture accounts={this.state.accounts} supplyChainContract={this.state.contract} />
               : <h1>Assign Manufacturer Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/ThirdParty/allProducts">
+            <Route exact path="/Distributor/allObats">
             {this.state.tpRole !== "" ?
-              <PurchaseThirdParty accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              <PurchaseDistributor accounts={this.state.accounts} supplyChainContract={this.state.contract} />
               : <h1>Assign Third Party Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/ThirdParty/receive">
+            <Route exact path="/Distributor/receive">
             {this.state.tpRole !== "" ?
-              <ReceiveThirdParty accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              <ReceiveDistributor accounts={this.state.accounts} supplyChainContract={this.state.contract} />
               : <h1>Assign Third Party Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/Customer/buy">
+            <Route exact path="/Apotek/buy">
             {this.state.cRole !== "" ?
-              <PurchaseCustomer accounts={this.state.accounts} supplyChainContract={this.state.contract} />
-              : <h1>Assign Customer Role at /RoleAdmin</h1> }
+              <PurchaseApotek accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              : <h1>Assign Apotek Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/ThirdParty/ship">
+            <Route exact path="/Distributor/ship">
             {this.state.tpRole !== "" ?
-              <ShipThirdParty accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              <ShipDistributor accounts={this.state.accounts} supplyChainContract={this.state.contract} />
               : <h1>Assign Third Party Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/DeliveryHub/receive">
+            <Route exact path="/Pengiriman/receive">
             {this.state.dhRole !== "" ?
-              <ReceiveDeliveryHub accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              <ReceivePengiriman accounts={this.state.accounts} supplyChainContract={this.state.contract} />
               : <h1>Assign Delivery Hub Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/DeliveryHub/ship">
+            <Route exact path="/Pengiriman/ship">
             {this.state.dhRole !== "" ?
-              <ShipDeliveryHub accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              <ShipPengiriman accounts={this.state.accounts} supplyChainContract={this.state.contract} />
               : <h1>Assign Delivery Hub Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/Customer/receive">
+            <Route exact path="/Apotek/receive">
             {this.state.cRole !== "" ?
-              <ReceiveCustomer accounts={this.state.accounts} supplyChainContract={this.state.contract} />
-              : <h1>Assign Customer Role at /RoleAdmin</h1> }
+              <ReceiveApotek accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              : <h1>Assign Apotek Role at /RoleAdmin</h1> }
             </Route>
-            <Route exact path="/Customer/allReceived">
+            <Route exact path="/Apotek/allReceived">
             {this.state.cRole !== "" ?
-              <ReceivedByCustomer accounts={this.state.accounts} supplyChainContract={this.state.contract} />
-              : <h1>Assign Customer Role at /RoleAdmin</h1> }
+              <ReceivedByApotek accounts={this.state.accounts} supplyChainContract={this.state.contract} />
+              : <h1>Assign Apotek Role at /RoleAdmin</h1> }
             </Route>
             
           </Switch>

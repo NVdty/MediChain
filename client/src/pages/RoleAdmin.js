@@ -12,9 +12,9 @@ function RoleAdmin(props) {
 
   const classes = useStyles();
   const [manufacturerRole, setManufacturerRole] = React.useState("");
-  const [thirdPartyRole, setThirdPartyRole] = React.useState("");
-  const [deliveryHubRole, setDeliveryHubRole] = React.useState("");
-  const [customerRole, setCustomerRole] = React.useState("");
+  const [thirdPartyRole, setDistributorRole] = React.useState("");
+  const [deliveryHubRole, setPengirimanRole] = React.useState("");
+  const [apotekRole, setApotekRole] = React.useState("");
   const navItem = [];
 
   const handleAddManufacturerRole = async () => {
@@ -32,76 +32,76 @@ function RoleAdmin(props) {
     setManufacturerRole("");
   }
   
-  const handleAddThirdPartyRole = async () => {
+  const handleAddDistributorRole = async () => {
     await setRoles({
       ...roles, 
-      thirdparty : thirdPartyRole
+      distributor : thirdPartyRole
     })
 
     localStorage.setItem("tpRole", thirdPartyRole);
-    await supplyChainContract.methods.addThirdPartyRole(thirdPartyRole).send({ from: accounts[0], gas:100000 })
+    await supplyChainContract.methods.addDistributorRole(thirdPartyRole).send({ from: accounts[0], gas:100000 })
     .then(console.log);
 
     
 
-    setThirdPartyRole("");
+    setDistributorRole("");
   }
 
-  const handleAddDeliveryHubRole = async () => {
+  const handleAddPengirimanRole = async () => {
     await setRoles({
       ...roles, 
-      deliveryhub : deliveryHubRole
+      pengiriman : deliveryHubRole
   })
 
    localStorage.setItem("dhRole", deliveryHubRole);
-    await supplyChainContract.methods.addDeliveryHubRole(deliveryHubRole).send({ from: accounts[0], gas:100000 })
+    await supplyChainContract.methods.addPengirimanRole(deliveryHubRole).send({ from: accounts[0], gas:100000 })
     .then(console.log);
 
     
 
-    setDeliveryHubRole("");
+    setPengirimanRole("");
   }
 
-  const handleAddCustomerRole = async () => {
+  const handleAddApotekRole = async () => {
     await setRoles({
       ...roles, 
-    customer : customerRole
+    apotek : apotekRole
   })
 
-   localStorage.setItem("cRole", customerRole);
-    await supplyChainContract.methods.addCustomerRole(customerRole).send({ from: accounts[0], gas:100000 })
+   localStorage.setItem("cRole", apotekRole);
+    await supplyChainContract.methods.addApotekRole(apotekRole).send({ from: accounts[0], gas:100000 })
     .then(console.log);
 
    
 
-    setCustomerRole("");
+    setApotekRole("");
   }
 
 
   return (
     <div>
       <ResponsiveDrawer navItems={navItem}>
-      <div className={classes.FormWrap}>
-      <h1 className={classes.pageHeading}>Add Roles</h1>
+      <div className={classes.FormWrap}> 
+      <h1 className={classes.pageHeading} style={{color:"#082616"}}>Wallet Address</h1>
       {console.log(roles)}
       
       <form className={classes.root} noValidate autoComplete="off">
         <div className={classes.RoleForm} >
           <TextField
             id="manufacturerRole"
-            label="Enter Manufacturer Address"
+            label="Masukkan Wallet Address Manufacture"
             variant="outlined"
             value={manufacturerRole}
             onChange={(e) => setManufacturerRole(e.target.value)}
-            style={{width:"70%"}}
+            style={{width:"70%", borderColor:"#19452d"}}
           />
           <Button
             variant="contained"
             color="primary"
             onClick={handleAddManufacturerRole}
-            style={{width:"30%", marginLeft:"10px"}}
+            style={{width:"30%", marginLeft:"10px", backgroundColor: "#212e27", textTransform: "none",}}
           >
-            Add Manufacturer
+            Tambah Address Manufacture
           </Button>
         </div>
       </form>
@@ -110,19 +110,19 @@ function RoleAdmin(props) {
         <div className={classes.RoleForm} >
           <TextField
             id="thirdPartyRole"
-            label="Enter Third Party Address "
+            label="Masukkan Wallet Address Distributor"
             variant="outlined"
             value={thirdPartyRole}
-            onChange={(e) => setThirdPartyRole(e.target.value)}
-            style={{width:"70%"}}
+            onChange={(e) => setDistributorRole(e.target.value)}
+            style={{width:"70%", borderColor:"#19452d"}}
           />
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddThirdPartyRole}
-            style={{width:"30%", marginLeft:"10px"}}
+            onClick={handleAddDistributorRole}
+            style={{width:"30%", marginLeft:"10px", backgroundColor: "#212e27", textTransform: "none",}}
           >
-            Add third party
+            Tambah Address Distibutor
           </Button>
         </div>
       </form>
@@ -131,19 +131,19 @@ function RoleAdmin(props) {
         <div className={classes.RoleForm} >
           <TextField
             id="deliveryHubRole"
-            label="Enter Delivery Hub Address"
+            label="Masukkan Wallet Address Pengiriman"
             variant="outlined"
             value={deliveryHubRole}
-            onChange={(e) => setDeliveryHubRole(e.target.value)}
-            style={{width:"70%"}}
+            onChange={(e) => setPengirimanRole(e.target.value)}
+            style={{width:"70%", borderColor:"#19452d"}}
           />
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddDeliveryHubRole}
-            style={{width:"30%", marginLeft:"10px"}}
+            onClick={handleAddPengirimanRole}
+            style={{width:"30%", marginLeft:"10px", backgroundColor: "#212e27", textTransform: "none",}}
           >
-            add delivery hub
+            Tambah Address Pengiriman
           </Button>
         </div>
       </form>
@@ -151,28 +151,28 @@ function RoleAdmin(props) {
       <form className={classes.root} noValidate autoComplete="off">
         <div className={classes.RoleForm} >
           <TextField
-            id="customerRole"
-            label=" Enter Customer Address"
+            id="apotekRole"
+            label=" Masukkan Wallet Address Apotek"
             variant="outlined"
-            value={customerRole}
-            onChange={(e) => setCustomerRole(e.target.value)}
-            style={{width:"70%"}}
+            value={apotekRole}
+            onChange={(e) => setApotekRole(e.target.value)}
+            style={{width:"70%", borderColor:"#19452d"}}
           />
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddCustomerRole}
-            style={{width:"30%", marginLeft:"10px"}}
+            onClick={handleAddApotekRole}
+            style={{width:"30%", marginLeft:"10px", backgroundColor: "#212e27", textTransform: "none",}} 
           >
-            add customer
+            Tambah Address Apotek
           </Button>
         </div>
       </form>
       </div>
       <div className={classes.FormWrap}>
-        <h1 className={classes.pageHeading}>Local Accounts</h1>
+        <h1 className={classes.pageHeading}style={{color:"#082616"}}>Wallet Address</h1>
         {accounts.slice(1).map((acc) => (
-          <h3 className={classes.tableCount}>{acc}</h3>
+          <h3 className={classes.tableCount}style={{color:"#0f4a2a"}}>{acc}</h3>
         ))}
         
       </div>

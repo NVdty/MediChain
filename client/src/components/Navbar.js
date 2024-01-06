@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: "#09126d",
-    color: "#fff",
+    backgroundColor: "#0d2e1c",
+    color: "#ffff",
   },
   drawerHeader: {
     display: "flex",
@@ -95,6 +95,7 @@ export default function PersistentDrawerLeft({ pageTitle,navItems, children }) {
       <CssBaseline />
       <AppBar
         position="fixed"
+        style={{backgroundColor:"#19452d"}}
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
@@ -119,7 +120,7 @@ export default function PersistentDrawerLeft({ pageTitle,navItems, children }) {
               src="/logo.png"
               style={{ height: "45px", width: "auto" }}
             />
-            &nbsp;SupplyChain-Dapp
+            &nbsp;Supply Chain Management Obat
           </Typography>
         </Toolbar>
       </AppBar>
@@ -136,14 +137,14 @@ export default function PersistentDrawerLeft({ pageTitle,navItems, children }) {
         <ListItemText><b>{pageTitle}</b></ListItemText>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "ltr" ? (
-              <ChevronLeftIcon style={{ color: "#fff" }} />
+              <ChevronLeftIcon style={{ color: "#ffff" }} />
             ) : (
               <ChevronRightIcon />
             )}
           </IconButton>
         </div>
         <List>
-          <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
+          <Link to="/" style={{ textDecoration: "none", color: "#ffff" }}>
             <ListItem>
               <ListItemText>Home</ListItemText>
             </ListItem>
@@ -173,30 +174,6 @@ export default function PersistentDrawerLeft({ pageTitle,navItems, children }) {
             <> </>
           )}
         </List>
-        <div
-          style={{ height: "100%", display: "flex", alignItems: "flex-end" }}
-        >
-          <div
-            style={{
-              width: "100%",
-              height: "70px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontWeight: 500,
-              fontSize: 17,
-              borderTop: "1px solid #44a",
-            }}
-          >
-            By Team Akatsuki &nbsp;&nbsp;
-            <a
-              style={{ textDecoration: "none" }}
-              href="https://github.com/rishav4101/eth-supplychain-dapp"
-            >
-              <GitHubIcon style={{ color: "#fff" }} />
-            </a>
-          </div>
-        </div>
       </Drawer>
       <main
         className={clsx(classes.content, {

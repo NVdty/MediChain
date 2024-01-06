@@ -3,39 +3,39 @@ pragma solidity >=0.4.21 <0.9.0;
 
 import "./Roles.sol";
 
-contract Customer {
+contract Apotek {
   using Roles for Roles.Role;
 
-  event CustomerAdded(address indexed _account);
-  event CustomerRemoved(address indexed _account);
+  event ApotekAdded(address indexed _account);
+  event ApotekRemoved(address indexed _account);
 
-  Roles.Role private customersList;
+  Roles.Role private apoteksList;
 
   constructor() public {
-    customersList.addRole(msg.sender);
-    emit CustomerAdded(msg.sender);
+    apoteksList.addRole(msg.sender);
+    emit ApotekAdded(msg.sender);
   }
 
-  ///@dev Modifiers for Customer.
-  modifier onlyCustomer() {
-    require(isCustomer(msg.sender));
+  ///@dev Modifiers for Apotek.
+  modifier onlyApotek() {
+    require(isApotek(msg.sender));
     _;
   }
   /*-----------------------------*/
 
-  ///@dev Customer Utility functions.
-  function isCustomer(address _account) public view returns (bool) {
-    return customersList.hasRole(_account);
+  ///@dev Apotek Utility functions.
+  function isApotek(address _account) public view returns (bool) {
+    return apoteksList.hasRole(_account);
   }
 
-  function addCustomer(address _account) public onlyCustomer {
-    customersList.addRole(_account);
-    emit CustomerAdded(_account);
+  function addApotek(address _account) public onlyApotek {
+    apoteksList.addRole(_account);
+    emit ApotekAdded(_account);
   }
 
-  function removeCustomer() public {
-    customersList.removeRole(msg.sender);
-    emit CustomerRemoved(msg.sender);
+  function removeApotek() public {
+    apoteksList.removeRole(msg.sender);
+    emit ApotekRemoved(msg.sender);
   }
   /*-----------------------------*/
 

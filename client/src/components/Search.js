@@ -12,7 +12,8 @@ const useStyles = makeStyles((theme) => ({
     width: '40%',
     border:"2px solid #1a237e",
     borderRadius:50,
-    boxShadow:"2px 2px 10px #9fa8da"
+    boxShadow:"2px 2px 10px #9fa8da",
+    borderColor:"#19452d"
 
   },
   input: {
@@ -45,8 +46,8 @@ export default function CustomizedInputBase(props) {
     <Paper  className={classes.root}>
       <input
         className={classes.input}
-        placeholder="Enter Product Universal ID"
-        inputProps={{ 'aria-label': 'Enter Product Universal ID' }}
+        placeholder="Masukan ID"
+        inputProps={{ 'aria-label': 'Masukan ID' }}
         onChange = {onTextChage}
         onKeyPress = {(e) => e.key === 'Enter'  ? props.findProduct(search): onTextChage}
       />

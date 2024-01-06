@@ -23,9 +23,9 @@ export default function ShipManufacture(props) {
   const [allSoldProducts, setAllSoldProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const navItem = [
-    ["Add Product", "/manufacturer/manufacture"],
-    ["Ship Product", "/manufacturer/ship"],
-    ["All Products", "/manufacturer/allManufacture"],
+    ["Data Obat", "/manufacturer/manufacture"],
+    ["Kirim Obat", "/manufacturer/ship"],
+    ["Daftar Obat", "/manufacturer/allManufacture"],
   ];
   const [alertText, setalertText] = React.useState("");
   React.useEffect(() => {
@@ -96,21 +96,21 @@ export default function ShipManufacture(props) {
   const handleShipButton = async (id) => {
     try{
       await supplyChainContract.methods
-      .shipToThirdParty(id)
+      .shipToDistributor(id)
       .send({ from: roles.manufacturer, gas: 1000000 })
       .on("transactionHash", function (hash) {
         handleSetTxhash(id, hash);
       });
     setCount(0);
     }catch{
-      setalertText("You are not the owner of the Product");
+      setalertText("Kamu Bukan Pemilik Produk Ini");
     }
     
   };
 
   return (
     <div className={classes.pageWrap}>
-      <Navbar pageTitle={"Manufacturer"} navItems={navItem}>
+      <Navbar pageTitle={"Manufacture"} navItems={navItem}>
         {loading ? (
           <Loader />
         ) : (
@@ -120,32 +120,35 @@ export default function ShipManufacture(props) {
               open={open}
               handleClose={handleClose}
             />
-            <h1 className={classes.pageHeading}>Products To be Shipped</h1>
-            <h3 className={classes.tableCount}>
+            <h1 className={classes.pageHeading} style={{color:"#082616"}}>Obat Yang Harus Dikirimkan</h1>
+            <h3 className={classes.tableCount} style={{color:"#082616"}}>
               Total : {allSoldProducts.length}
             </h3>
 
             <div>
             <p><b style={{ color: "red" }}>{alertText.length !== 0 ? alertText : ""}</b></p>
               <Paper className={classes.TableRoot}>
-                <TableContainer className={classes.TableContainer}>
+                <TableContainer className={classes.TableContainer} >
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                       <TableRow>
                         <TableCell className={classes.TableHead} align="left">
-                          Universal ID
+                          ID
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Code
+                          Kode Obat
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacturer
+                          Manufacture
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Manufacture Date
+                          Tanggal Pesanan
                         </TableCell>
                         <TableCell className={classes.TableHead} align="center">
-                          Product Name
+                          Nama Obat
+                        </TableCell>
+                        <TableCell className={classes.TableHead} align="center">
+                          Nomor Batch
                         </TableCell>
                         <TableCell
                           className={clsx(
@@ -154,13 +157,13 @@ export default function ShipManufacture(props) {
                           )}
                           align="center"
                         >
-                          Owner
+                          Pemilik
                         </TableCell>
                         <TableCell
                           className={clsx(classes.TableHead)}
                           align="center"
                         >
-                          Ship
+                          Kirim
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -208,7 +211,7 @@ export default function ShipManufacture(props) {
                                     align="center"
                                     onClick={() => handleClick(prod)}
                                   >
-                                    {d.toDateString() + " " + d.toTimeString()}
+                                    {d.toDateString()}
                                   </TableCell>
                                   <TableCell
                                     className={classes.TableCell}
@@ -216,6 +219,13 @@ export default function ShipManufacture(props) {
                                     onClick={() => handleClick(prod)}
                                   >
                                     {prod[1][1]}
+                                  </TableCell>
+                                  <TableCell
+                                    className={classes.TableCell}
+                                    align="center"
+                                    onClick={() => handleClick(prod)}
+                                  >
+                                    {prod[1][3]}
                                   </TableCell>
                                   <TableCell
                                     className={clsx(
@@ -235,11 +245,12 @@ export default function ShipManufacture(props) {
                                       type="submit"
                                       variant="contained"
                                       color="primary"
+                                      style={{backgroundColor: "#212e27"}}
                                       onClick={() =>
                                         handleShipButton(prod[0][0])
                                       }
                                     >
-                                      SHIP
+                                      KIRIM
                                     </Button>
                                   </TableCell>
                                 </TableRow>
